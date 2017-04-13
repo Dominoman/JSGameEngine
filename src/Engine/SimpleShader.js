@@ -12,6 +12,7 @@
 function SimpleShader(vertexShaderID, fragmentShaderID) {
     this.mCompiledShader = null;
     this.mShaderVertexPositionAttribute = null;
+    this.mPixelColor = null;
 
     var gl = gEngine.Core.getGL();
 
@@ -30,6 +31,7 @@ function SimpleShader(vertexShaderID, fragmentShaderID) {
     this.mShaderVertexPositionAttribute = gl.getAttribLocation(this.mCompiledShader, "aSquareVertexPosition");
     gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLVertexRef());
     gl.vertexAttribPointer(this.mShaderVertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+    this.mPixelColor = gl.getUniformLocation(this.mCompiledShader, "uPixelColor");
 }
 
 /**
@@ -60,11 +62,13 @@ SimpleShader.prototype._loadAndCompileShader = function (filePath, shaderType) {
 
 /**
  *
+ * @param pixelColor
  */
-SimpleShader.prototype.activateShader = function () {
+SimpleShader.prototype.activateShader = function (pixelColor) {
     var gl = gEngine.Core.getGL();
     gl.useProgram(this.mCompiledShader);
     gl.enableVertexAttribArray(this.mShaderVertexPositionAttribute);
+    gl.uniform4fv(this.mPixelColor, pixelColor);
 };
 
 SimpleShader.prototype.getShader = function () {
