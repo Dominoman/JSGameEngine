@@ -4,12 +4,18 @@
 "use strict";
 
 function MyGame(htmlCanvasID) {
-    this.mShader = null;
-
     gEngine.Core.initializeWebGL(htmlCanvasID);
-    this.mShader = new SimpleShader("src/GLSLShaders/SimpleVS.glsl", "src/GLSLShaders/SimpleFS.glsl");
+    this.mConstColorShader = new SimpleShader("src/GLSLShaders/SimpleVS.glsl", "src/GLSLShaders/SimpleFS.glsl");
+
+    this.mWhiteSq = new Renderable(this.mConstColorShader);
+    this.mWhiteSq.setColor([1, 1, 1, 1]);
+
+    this.mRedSq = new Renderable(this.mConstColorShader);
+    this.mRedSq.setColor([1, 0, 0, 1]);
+
     gEngine.Core.clearCanvas([0, 0.8, 0.1]);
-    this.mShader.activateShader([0, 0, 1, 1]);
-    var gl = gEngine.Core.getGL();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    this.mWhiteSq.draw();
+
+    this.mRedSq.draw();
 }
