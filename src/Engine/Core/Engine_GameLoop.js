@@ -45,16 +45,27 @@ gEngine.GameLoop = (function () {
 
     /**
      *
-     * @param myGame
+     * @private
      */
-    var start = function (myGame) {
-        mMyGame = myGame;
+    var _startLoop = function () {
         mPreviousTime = Date.now();
         mLagTime = 0.0;
         mIsLoopRunning = true;
         requestAnimationFrame(function () {
             _runLoop.call(mMyGame)
         });
+    };
+
+    /**
+     *
+     * @param myGame
+     */
+    var start = function (myGame) {
+        mMyGame = myGame;
+        gEngine.ResourceMap.setLoadCompleteCallback(function () {
+            mMyGame.initialize();
+            _startLoop();
+        })
     };
 
     var mPublic = {

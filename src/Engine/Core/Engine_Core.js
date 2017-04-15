@@ -52,7 +52,7 @@ gEngine.Core = (function () {
      * @param myGame
      */
     var startScene = function (myGame) {
-        myGame.initialize.call(myGame);
+        myGame.loadScene.call(myGame);
         gEngine.GameLoop.start(myGame);
     };
 
