@@ -7,6 +7,7 @@ function MyGame(htmlCanvasID) {
     gEngine.Core.initializeWebGL(htmlCanvasID);
     var gl = gEngine.Core.getGL();
     this.mConstColorShader = new SimpleShader("src/GLSLShaders/SimpleVS.glsl", "src/GLSLShaders/SimpleFS.glsl");
+    this.mCamera = new Camera(vec2.fromValues(20, 60), 20, [20, 40, 600, 300]);
 
     this.mBlueSq = new Renderable(this.mConstColorShader);
     this.mBlueSq.setColor([0.25, 0.25, 0.95, 1]);
@@ -22,31 +23,8 @@ function MyGame(htmlCanvasID) {
     this.mBLSq.setColor([0.1, 0.1, 0.1, 1]); // Bottom-Left shows dark gray
 
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1]);
-    gl.viewport(20, 40, 600, 300);
-    gl.scissor(20, 40, 600, 300);
-    gl.enable(gl.SCISSOR_TEST);
-    gEngine.Core.clearCanvas([0.8, 0.8, 0.8, 1]);
-    gl.disable(gl.SCISSOR_TEST);
-
-    var viewMatrix = mat4.create();
-    var projMatrix = mat4.create();
-// Step F1: define the view matrix
-    mat4.lookAt(viewMatrix,
-        [20, 60, 10], // camera position
-        [20, 60, 0], // look at position
-        [0, 1, 0]); // orientation
-// Step F2: define the projection matrix
-    mat4.ortho(projMatrix,
-        -10, // distant to left of WC
-        10, // distant to right of WC
-        -5, // distant to bottom of WC
-        5, // distant to top of WC
-        0, // z-distant to near plane
-        1000 // z-distant to far plane
-    );
-// Step F3: concatenate to form the View-Projection operator
-    var vpMatrix = mat4.create();
-    mat4.multiply(vpMatrix, projMatrix, viewMatrix);
+    this.mCamera.setupViewProjection();
+    var vpMatrix = this.mCamera.getVPMatrix();
 
     // Step G: Draw the blue square
 // Centre Blue, slightly rotated square
