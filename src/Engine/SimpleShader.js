@@ -5,11 +5,11 @@
 
 /**
  *
- * @param vertexShaderID
- * @param fragmentShaderID
+ * @param vertexShaderPath
+ * @param fragmentShaderPath
  * @constructor
  */
-function SimpleShader(vertexShaderID, fragmentShaderID) {
+function SimpleShader(vertexShaderPath, fragmentShaderPath) {
     this.mCompiledShader = null;
     this.mShaderVertexPositionAttribute = null;
     this.mPixelColor = null;
@@ -18,8 +18,8 @@ function SimpleShader(vertexShaderID, fragmentShaderID) {
 
     var gl = gEngine.Core.getGL();
 
-    var vertexShader = this._loadAndCompileShader(vertexShaderID, gl.VERTEX_SHADER);
-    var fragmentShader = this._loadAndCompileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
+    var vertexShader = this._compileShader(vertexShaderPath, gl.VERTEX_SHADER);
+    var fragmentShader = this._compileShader(fragmentShaderPath, gl.FRAGMENT_SHADER);
 
     this.mCompiledShader = gl.createProgram();
     gl.attachShader(this.mCompiledShader, vertexShader);
@@ -44,17 +44,9 @@ function SimpleShader(vertexShaderID, fragmentShaderID) {
  * @param shaderType
  * @private
  */
-SimpleShader.prototype._loadAndCompileShader = function (filePath, shaderType) {
+SimpleShader.prototype._compileShader = function (filePath, shaderType) {
     var gl = gEngine.Core.getGL();
-    var xmlReq = new XMLHttpRequest();
-    xmlReq.open('GET', filePath, false);
-    try {
-        xmlReq.send();
-    } catch (error) {
-        alert("Failed to load shader: " + filePath);
-        return null;
-    }
-    var shaderSource = xmlReq.responseText;
+    var shaderSource = gEngine.ResourceMap.retrieveAsset(filePath);
     var compiledShader = gl.createShader(shaderType);
     gl.shaderSource(compiledShader, shaderSource);
     gl.compileShader(compiledShader);
@@ -67,6 +59,7 @@ SimpleShader.prototype._loadAndCompileShader = function (filePath, shaderType) {
 /**
  *
  * @param pixelColor
+ * @param vpMatrix
  */
 SimpleShader.prototype.activateShader = function (pixelColor, vpMatrix) {
     var gl = gEngine.Core.getGL();

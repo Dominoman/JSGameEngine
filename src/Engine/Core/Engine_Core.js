@@ -13,11 +13,16 @@ gEngine.Core = (function () {
 
     /**
      *
+     * @param htmlCanvasID
+     * @param myGame
      */
-    var initializeEngineCore = function (htmlCanvasID) {
+    var initializeEngineCore = function (htmlCanvasID, myGame) {
         _initializeWebGL(htmlCanvasID);
         gEngine.VertexBuffer.initialize();
         gEngine.Input.initialize();
+        gEngine.DefaultResources.initialize(function () {
+            startScene(myGame);
+        });
     };
 
     /**
@@ -40,6 +45,15 @@ gEngine.Core = (function () {
     var clearCanvas = function (color) {
         mGL.clearColor(color[0], color[1], color[2], color[3]);
         mGL.clear(mGL.COLOR_BUFFER_BIT);
+    };
+
+    /**
+     *
+     * @param myGame
+     */
+    var startScene = function (myGame) {
+        myGame.initialize.call(myGame);
+        gEngine.GameLoop.start(myGame);
     };
 
     var mPublic = {

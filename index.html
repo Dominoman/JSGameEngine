@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <title>Example</title>
 </head>
-<body onload="new MyGame('GLCanvas')">
+<body onload="var myGame=new MyGame();
+            gEngine.Core.initializeEngineCore('GLCanvas',myGame);">
 
 <script type="text/javascript" src="src/lib/gl-matrix-min.js"></script>
 <script type="text/javascript" src="src/Engine/Core/Engine_Core.js"></script>
 <script type="text/javascript" src="src/Engine/Core/Engine_VertexBuffer.js"></script>
 <script type="text/javascript" src="src/Engine/Core/Engine_GameLoop.js"></script>
 <script type="text/javascript" src="src/Engine/Core/Engine_Input.js"></script>
+<script type="text/javascript" src="src/Engine/Core/Resources/Engine_ResourceMap.js"></script>
+<script type="text/javascript" src="src/Engine/Core/Resources/Engine_TextFileLoader.js"></script>
+<script type="text/javascript" src="src/Engine/Core/Resources/Engine_DefaultResources.js"></script>
 <script type="text/javascript" src="src/Engine/SimpleShader.js"></script>
 <script type="text/javascript" src="src/Engine/Renderable.js"></script>
 <script type="text/javascript" src="src/Engine/Transform.js"></script>

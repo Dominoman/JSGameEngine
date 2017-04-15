@@ -3,14 +3,15 @@
  */
 "use strict";
 
-function MyGame(htmlCanvasID) {
+/**
+ *
+ * @constructor
+ */
+function MyGame() {
     this.mConstColorShader = null;
     this.mWhiteSq = null;
     this.mRedSq = null;
     this.mCamera = null;
-
-    gEngine.Core.initializeEngineCore(htmlCanvasID);
-    this.initialize();
 }
 
 /**
@@ -20,7 +21,7 @@ MyGame.prototype.initialize = function () {
     this.mCamera = new Camera(vec2.fromValues(20, 60), 20, [20, 40, 600, 300]);
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 
-    this.mConstColorShader = new SimpleShader("src/GLSLShaders/SimpleVS.glsl", "src/GLSLShaders/SimpleFS.glsl");
+    this.mConstColorShader = gEngine.DefaultResources.getConstColorShader();
 
     this.mWhiteSq = new Renderable(this.mConstColorShader);
     this.mWhiteSq.setColor([1, 1, 1, 1]);
