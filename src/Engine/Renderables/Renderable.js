@@ -5,11 +5,10 @@
 
 /**
  *
- * @param shader
  * @constructor
  */
-function Renderable(shader) {
-    this.mShader = shader;
+function Renderable() {
+    this.mShader = gEngine.DefaultResources.getConstColorShader();
     this.mColor = [1, 1, 1, 1];
     this.mXform = new Transform();
 }
@@ -34,4 +33,6 @@ Renderable.prototype.setColor = function (color) {
 Renderable.prototype.getColor = function () {
     return this.mColor;
 };
-
+Renderable.prototype._setShader = function (s) {
+    this.mShader = s;
+};

@@ -32,10 +32,12 @@ gEngine.Core = (function () {
      */
     var _initializeWebGL = function (htmlCanvasID) {
         var canvas = document.getElementById(htmlCanvasID);
-        mGL = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+        mGL = canvas.getContext("webgl", {alpha: false}) || canvas.getContext("experimental-webgl", {alpha: false});
+        mGL.blendFunc(mGL.SRC_ALPHA, mGL.ONE_MINUS_SRC_ALPHA);
+        mGL.enable(mGL.BLEND);
+        mGL.pixelStorei(mGL.UNPACK_FLIP_Y_WEBGL, true);
         if (mGL === null) {
             document.write("<br><b>WebGL is not supported!</b>");
-
         }
     };
 

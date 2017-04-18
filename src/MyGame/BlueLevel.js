@@ -9,8 +9,8 @@
  */
 function BlueLevel() {
     this.kSceneFile="assets/BlueLevel.xml";
-    this.kBgClip = "assets/sounds/BGClip.mp3";
-    this.kCue = "assets/sounds/BlueLevel_cue.wav";
+    this.kPortal = "assets/minion_portal.jpg";
+    this.kCollector = "assets/minion_collector.jpg";
     this.mSqSet=[];
     this.mCamera=null;
 }
@@ -21,8 +21,8 @@ gEngine.Core.inheritPrototype(BlueLevel,Scene);
  */
 BlueLevel.prototype.loadScene=function () {
     gEngine.TextFileLoader.loadTextFile(this.kSceneFile,gEngine.TextFileLoader.eTextFileType.eXMLFile);
-    gEngine.AudioClips.loadAudio(this.kBgClip);
-    gEngine.AudioClips.loadAudio(this.kCue);
+    gEngine.Textures.loadTexture(this.kPortal);
+    gEngine.Textures.loadTexture(this.kCollector);
 };
 
 /**
@@ -33,6 +33,7 @@ BlueLevel.prototype.initialize = function () {
     gEngine.AudioClips.playBackgroundAudio(this.kBGClip);
     this.mCamera = sceneParser.parseCamera();
     sceneParser.parseSquares(this.mSqSet);
+    sceneParser.parseTextureSquares(this.mSqSet);
 };
 
 /**
@@ -66,6 +67,12 @@ BlueLevel.prototype.update = function () {
             gEngine.GameLoop.stop();
         }
     }
+    var c = this.mSqSet[1].getColor();
+    var ca = c[3] + deltaX;
+    if (ca > 1)
+        ca = 0;
+    c[3] = ca;
+
 };
 
 /**
@@ -73,9 +80,8 @@ BlueLevel.prototype.update = function () {
  */
 BlueLevel.prototype.unloadScene=function () {
     gEngine.TextFileLoader.unloadTextFile(this.kSceneFile);
-    gEngine.AudioClips.stopBackgroundAuido();
-    gEngine.AudioClips.unloadAudio(this.kBGClip);
-    gEngine.AudioClips.unloadAudio(this.kCue);
+    gEngine.Textures.unloadTexture(this.kPortal);
+    gEngine.Textures.unloadTexture(this.kCollector);
     var nextLevel=new MyGame();
     gEngine.Core.startScene(nextLevel);
 };
