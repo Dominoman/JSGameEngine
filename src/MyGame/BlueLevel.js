@@ -1,5 +1,5 @@
 /**
- * Created by Laca on 2017. 04. 13..
+ * Created by Laca on 2017. 04. 18..
  */
 "use strict";
 
@@ -7,34 +7,24 @@
  *
  * @constructor
  */
-function MyGame() {
-    this.kSceneFile = "assets/scene.xml";
-    this.mSqSet = [];
-
-    this.mCamera = null;
+function BlueLevel() {
+    this.kSceneFile="assets/BlueLevel.xml";
+    this.mSqSet=[];
+    this.mCamera=null;
 }
-gEngine.Core.inheritPrototype(MyGame,Scene);
+gEngine.Core.inheritPrototype(BlueLevel,Scene);
 
 /**
  *
  */
-MyGame.prototype.loadScene = function () {
-    gEngine.TextFileLoader.loadTextFile(this.kSceneFile, gEngine.TextFileLoader.eTextFileType.eXMLFile);
+BlueLevel.prototype.loadScene=function () {
+    gEngine.TextFileLoader.loadTextFile(this.kSceneFile,gEngine.TextFileLoader.eTextFileType.eXMLFile);
 };
 
 /**
  *
  */
-MyGame.prototype.unloadScene = function () {
-    gEngine.TextFileLoader.unloadTextFile(this.kSceneFile);
-    var nextLevel=new BlueLevel();
-    gEngine.Core.startScene(nextLevel);
-};
-
-/**
- *
- */
-MyGame.prototype.initialize = function () {
+BlueLevel.prototype.initialize = function () {
     var sceneParser = new SceneFileParser(this.kSceneFile);
 
     this.mCamera = sceneParser.parseCamera();
@@ -44,7 +34,7 @@ MyGame.prototype.initialize = function () {
 /**
  *
  */
-MyGame.prototype.update = function () {
+BlueLevel.prototype.update = function () {
 // For this very simple game, let's move the white square and pulse the red
     var whiteXform = this.mSqSet[0].getXform();
     var deltaX = 0.05;
@@ -70,15 +60,24 @@ MyGame.prototype.update = function () {
             gEngine.GameLoop.stop();
         }
     }
-
 };
 
 /**
  *
  */
-MyGame.prototype.draw = function () {
+BlueLevel.prototype.unloadScene=function () {
+    gEngine.TextFileLoader.unloadTextFile(this.kSceneFile);
+    var nextLevel=new MyGame();
+    gEngine.Core.startScene(nextLevel);
+};
+
+/**
+ *
+ */
+BlueLevel.prototype.draw = function () {
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]);
     this.mCamera.setupViewProjection();
     for (var i = 0; i < this.mSqSet.length; i++)
         this.mSqSet[i].draw(this.mCamera.getVPMatrix())
 };
+

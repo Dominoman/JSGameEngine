@@ -56,10 +56,23 @@ gEngine.Core = (function () {
         gEngine.GameLoop.start(myGame);
     };
 
+    /**
+     *
+     * @param subClass
+     * @param superClass
+     */
+    var inheritPrototype=function (subClass,superClass) {
+        var prototype=Object.create(superClass.prototype);
+        prototype.constructor=subClass;
+        subClass.prototype=prototype
+    };
+
     var mPublic = {
         getGL: getGL,
         initializeEngineCore: initializeEngineCore,
-        clearCanvas: clearCanvas
+        clearCanvas: clearCanvas,
+        inheritPrototype:inheritPrototype,
+        startScene:startScene
     };
 
     return mPublic;
