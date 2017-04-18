@@ -9,6 +9,8 @@
  */
 function BlueLevel() {
     this.kSceneFile="assets/BlueLevel.xml";
+    this.kBgClip = "assets/sounds/BGClip.mp3";
+    this.kCue = "assets/sounds/BlueLevel_cue.wav";
     this.mSqSet=[];
     this.mCamera=null;
 }
@@ -19,6 +21,8 @@ gEngine.Core.inheritPrototype(BlueLevel,Scene);
  */
 BlueLevel.prototype.loadScene=function () {
     gEngine.TextFileLoader.loadTextFile(this.kSceneFile,gEngine.TextFileLoader.eTextFileType.eXMLFile);
+    gEngine.AudioClips.loadAudio(this.kBgClip);
+    gEngine.AudioClips.loadAudio(this.kCue);
 };
 
 /**
@@ -26,7 +30,7 @@ BlueLevel.prototype.loadScene=function () {
  */
 BlueLevel.prototype.initialize = function () {
     var sceneParser = new SceneFileParser(this.kSceneFile);
-
+    gEngine.AudioClips.playBackgroundAudio(this.kBGClip);
     this.mCamera = sceneParser.parseCamera();
     sceneParser.parseSquares(this.mSqSet);
 };
@@ -40,6 +44,7 @@ BlueLevel.prototype.update = function () {
     var deltaX = 0.05;
 // Step A: test for white square movement
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
+        gEngine.AudioClips.playACue(this.kCue);
         if (whiteXform.getXPos() > 30) // the right-bound of the window
             whiteXform.setPosition(10, 60);
         whiteXform.incXPosBy(deltaX);
@@ -55,6 +60,7 @@ BlueLevel.prototype.update = function () {
         redXform.incSizeBy(0.05);
     }
     if(gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)){
+        gEngine.AudioClips.playACue(this.kCue);
         redXform.incXPosBy(-deltaX);
         if(redXform.getXPos()<11){
             gEngine.GameLoop.stop();
@@ -67,6 +73,9 @@ BlueLevel.prototype.update = function () {
  */
 BlueLevel.prototype.unloadScene=function () {
     gEngine.TextFileLoader.unloadTextFile(this.kSceneFile);
+    gEngine.AudioClips.stopBackgroundAuido();
+    gEngine.AudioClips.unloadAudio(this.kBGClip);
+    gEngine.AudioClips.unloadAudio(this.kCue);
     var nextLevel=new MyGame();
     gEngine.Core.startScene(nextLevel);
 };

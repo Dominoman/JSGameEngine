@@ -16,6 +16,7 @@ gEngine.ResourceMap = (function () {
      */
     var MapEntry = function (rName) {
         this.mAsset = rName;
+        this.mRefCount = 1;
     };
 
     var mResourceMap = {};
@@ -84,10 +85,26 @@ gEngine.ResourceMap = (function () {
     /**
      *
      * @param rName
+     * @return int
      */
     var unloadAsset = function (rName) {
-        if (rName in mResourceMap)
-            delete mResourceMap[rName];
+        var c = 0;
+        if (rName in mResourceMap) {
+            mResourceMap[rName].mRefCount -= 1;
+            c = mResourceMap[rName].mRefCount;
+            if (c === 0) {
+                delete mResourceMap[rName];
+            }
+        }
+        return c;
+    };
+
+    /**
+     *
+     * @param rName
+     */
+    var incAssetRefCount = function (rName) {
+        mResourceMap[rName].mRefCount += 1;
     };
 
     var mPublic = {
@@ -97,7 +114,8 @@ gEngine.ResourceMap = (function () {
 
         retrieveAsset: retrieveAsset,
         unloadAsset: unloadAsset,
-        isAssetLoaded: isAssetLoaded
+        isAssetLoaded: isAssetLoaded,
+        incAssetRefCount: incAssetRefCount
     };
     return mPublic;
 }());

@@ -23,6 +23,7 @@ gEngine.Core = (function () {
         gEngine.DefaultResources.initialize(function () {
             startScene(myGame);
         });
+        gEngine.AudioClips.initAudioContext();
     };
 
     /**
