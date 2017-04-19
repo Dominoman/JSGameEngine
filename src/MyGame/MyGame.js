@@ -8,13 +8,15 @@
  * @constructor
  */
 function MyGame() {
-    this.kPortal = "assets/minion_portal.png";
-    this.kCollector = "assets/minion_collector.png";
+    this.kFontImage = "assets/Consolas-72.png";
+    this.kMinionSprite = "assets/minion_sprite.png";
 
     this.mCamera = null;
     this.mHero = null;
     this.mPortal = null;
     this.mCollector = null;
+    this.mFontImage = null;
+    this.mMinion = null;
 }
 gEngine.Core.inheritPrototype(MyGame,Scene);
 
@@ -22,19 +24,16 @@ gEngine.Core.inheritPrototype(MyGame,Scene);
  *
  */
 MyGame.prototype.loadScene = function () {
-    gEngine.Textures.loadTexture(this.kPortal);
-    gEngine.Textures.loadTexture(this.kCollector);
+    gEngine.Textures.loadTexture(this.kFontImage);
+    gEngine.Textures.loadTexture(this.kMinionSprite);
 };
 
 /**
  *
  */
 MyGame.prototype.unloadScene = function () {
-    gEngine.Textures.unloadTexture(this.kPortal);
-    gEngine.Textures.unloadTexture(this.kCollector);
-
-    var nextLevel=new BlueLevel();
-    gEngine.Core.startScene(nextLevel);
+    gEngine.Textures.unloadTexture(this.kFontImage);
+    gEngine.Textures.unloadTexture(this.kMinionSprite);
 };
 
 /**
@@ -51,28 +50,41 @@ MyGame.prototype.initialize = function () {
 
     // sets the background to gray
     // Step B: Create the game objects
-    this.mPortal = new TextureRenderable(this.kPortal);
+    this.mPortal = new SpriteRenderable(this.kMinionSprite);
     this.mPortal.setColor([1, 0, 0, 0.2]); // tints red
     this.mPortal.getXform().setPosition(25, 60);
     this.mPortal.getXform().setSize(3, 3);
+    this.mPortal.setElementPixelPositions(130, 310, 0, 180);
 
-    this.mCollector = new TextureRenderable(this.kCollector);
+    this.mCollector = new SpriteRenderable(this.kMinionSprite);
     this.mCollector.setColor([0, 0, 0, 0]); // No tinting
     this.mCollector.getXform().setPosition(15, 60);
     this.mCollector.getXform().setSize(3, 3);
+    this.mCollector.setElementPixelPositions(315, 495, 0, 180);
+
+    this.mFontImage = new SpriteRenderable(this.kFontImage);
+    this.mFontImage.setColor([1, 1, 1, 0]);
+    this.mFontImage.getXform().setPosition(13, 62);
+    this.mFontImage.getXform().setSize(4, 4);
+
+    this.mMinion = new SpriteRenderable(this.kMinionSprite);
+    this.mMinion.setColor([1, 1, 1, 0]);
+    this.mMinion.getXform().setPosition(26, 56);
+    this.mMinion.getXform().setSize(5, 2.5);
 
     // Step C: Create the hero object in blue
-    this.mHero = new Renderable();
-    this.mHero.setColor([0, 0, 1, 1]);
+    this.mHero = new SpriteRenderable(this.kMinionSprite);
+    this.mHero.setColor([1, 1, 1, 0]);
     this.mHero.getXform().setPosition(20, 60);
     this.mHero.getXform().setSize(2, 3);
+    this.mHero.setElementPixelPositions(0, 120, 0, 180);
 };
 
 /**
  *
  */
 MyGame.prototype.update = function () {
-    // let's only allow the movement of hero,
+// let's only allow the movement of hero,
     // and if hero moves too far off, this level ends, we will
     // load the next level
     var deltaX = 0.05;
@@ -81,7 +93,7 @@ MyGame.prototype.update = function () {
     // Support hero movements
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
         xform.incXPosBy(deltaX);
-        if (xform.getXPos() > 30) { // this is the right-bound of the window
+        if (xform.getXPos() > 30) {  // this is the right-bound of the window
             xform.setPosition(12, 60);
         }
     }
@@ -89,7 +101,7 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
         xform.incXPosBy(-deltaX);
         if (xform.getXPos() < 11) {  // this is the left-bound of the window
-            gEngine.GameLoop.stop();
+            xform.setXPos(20);
         }
     }
 
@@ -100,6 +112,60 @@ MyGame.prototype.update = function () {
         ca = 0;
     }
     c[3] = ca;
+
+    // New update code for changing the sub-texture regions being shown"
+    var deltaT = 0.001;
+
+    // <editor-fold desc="The font image:">
+    // zoom into the texture by updating texture coordinate
+    // For font: zoom to the upper left corner by changing bottom right
+    var texCoord = this.mFontImage.getElementUVCoordinateArray();
+    // The 8 elements:
+    //      mTexRight,  mTexTop,          // x,y of top-right
+    //      mTexLeft,   mTexTop,
+    //      mTexRight,  mTexBottom,
+    //      mTexLeft,   mTexBottom
+    var b = texCoord[SpriteRenderable.eTexCoordArray.eBottom] + deltaT;
+    var r = texCoord[SpriteRenderable.eTexCoordArray.eRight] - deltaT;
+    if (b > 1.0) {
+        b = 0;
+    }
+    if (r < 0) {
+        r = 1.0;
+    }
+    this.mFontImage.setElementUVCoordinate(
+        texCoord[SpriteRenderable.eTexCoordArray.eLeft],
+        r,
+        b,
+        texCoord[SpriteRenderable.eTexCoordArray.eTop]
+    );
+    // </editor-fold>
+
+    // <editor-fold desc="The minion image:">
+    // For minion: zoom to the bottom right corner by changing top left
+    texCoord = this.mMinion.getElementUVCoordinateArray();
+    // The 8 elements:
+    //      mTexRight,  mTexTop,          // x,y of top-right
+    //      mTexLeft,   mTexTop,
+    //      mTexRight,  mTexBottom,
+    //      mTexLeft,   mTexBottom
+    var t = texCoord[SpriteRenderable.eTexCoordArray.eTop] - deltaT;
+    var l = texCoord[SpriteRenderable.eTexCoordArray.eLeft] + deltaT;
+
+    if (l > 0.5) {
+        l = 0;
+    }
+    if (t < 0.5) {
+        t = 1.0;
+    }
+
+    this.mMinion.setElementUVCoordinate(
+        l,
+        texCoord[SpriteRenderable.eTexCoordArray.eRight],
+        texCoord[SpriteRenderable.eTexCoordArray.eBottom],
+        t
+    );
+    // </editor-fold>
 };
 
 /**
@@ -114,6 +180,8 @@ MyGame.prototype.draw = function () {
 
     // Step  C: Draw everything
     this.mPortal.draw(this.mCamera.getVPMatrix());
-    this.mHero.draw(this.mCamera.getVPMatrix());
     this.mCollector.draw(this.mCamera.getVPMatrix());
+    this.mHero.draw(this.mCamera.getVPMatrix());
+    this.mFontImage.draw(this.mCamera.getVPMatrix());
+    this.mMinion.draw(this.mCamera.getVPMatrix());
 };
