@@ -13,8 +13,8 @@ gEngine.Core = (function () {
 
     /**
      *
-     * @param htmlCanvasID
-     * @param myGame
+     * @param {string} htmlCanvasID
+     * @param {Scene} myGame
      */
     var initializeEngineCore = function (htmlCanvasID, myGame) {
         _initializeWebGL(htmlCanvasID);
@@ -28,7 +28,7 @@ gEngine.Core = (function () {
 
     /**
      *
-     * @param htmlCanvasID
+     * @param {string} htmlCanvasID
      */
     var _initializeWebGL = function (htmlCanvasID) {
         var canvas = document.getElementById(htmlCanvasID);
@@ -43,7 +43,7 @@ gEngine.Core = (function () {
 
     /**
      *
-     * @param color
+     * @param {Number[]} color
      */
     var clearCanvas = function (color) {
         mGL.clearColor(color[0], color[1], color[2], color[3]);
@@ -52,7 +52,7 @@ gEngine.Core = (function () {
 
     /**
      *
-     * @param myGame
+     * @param {Scene} myGame
      */
     var startScene = function (myGame) {
         myGame.loadScene.call(myGame);
@@ -61,8 +61,8 @@ gEngine.Core = (function () {
 
     /**
      *
-     * @param subClass
-     * @param superClass
+     * @param {Object} subClass
+     * @param {Object} superClass
      */
     var inheritPrototype=function (subClass,superClass) {
         var prototype=Object.create(superClass.prototype);
@@ -70,12 +70,21 @@ gEngine.Core = (function () {
         subClass.prototype=prototype
     };
 
+    /**
+     *
+     */
+    var cleanUp = function () {
+        gEngine.VertexBuffer.cleanUp();
+        gEngine.DefaultResources.cleanUp();
+    };
+
     var mPublic = {
         getGL: getGL,
         initializeEngineCore: initializeEngineCore,
         clearCanvas: clearCanvas,
         inheritPrototype:inheritPrototype,
-        startScene:startScene
+        startScene: startScene,
+        cleanUp: cleanUp
     };
 
     return mPublic;

@@ -5,8 +5,8 @@
 
 /**
  *
- * @param vertexShaderPath
- * @param fragmentShaderPath
+ * @param {string} vertexShaderPath
+ * @param {string} fragmentShaderPath
  * @constructor
  */
 function SimpleShader(vertexShaderPath, fragmentShaderPath) {
@@ -18,12 +18,12 @@ function SimpleShader(vertexShaderPath, fragmentShaderPath) {
 
     var gl = gEngine.Core.getGL();
 
-    var vertexShader = this._compileShader(vertexShaderPath, gl.VERTEX_SHADER);
-    var fragmentShader = this._compileShader(fragmentShaderPath, gl.FRAGMENT_SHADER);
+    this.mVertexShader = this._compileShader(vertexShaderPath, gl.VERTEX_SHADER);
+    this.mFragmentShader = this._compileShader(fragmentShaderPath, gl.FRAGMENT_SHADER);
 
     this.mCompiledShader = gl.createProgram();
-    gl.attachShader(this.mCompiledShader, vertexShader);
-    gl.attachShader(this.mCompiledShader, fragmentShader);
+    gl.attachShader(this.mCompiledShader, this.mVertexShader);
+    gl.attachShader(this.mCompiledShader, this.mFragmentShader);
     gl.linkProgram(this.mCompiledShader);
 
     if (!gl.getProgramParameter(this.mCompiledShader, gl.LINK_STATUS)) {
@@ -40,8 +40,8 @@ function SimpleShader(vertexShaderPath, fragmentShaderPath) {
 
 /**
  *
- * @param filePath
- * @param shaderType
+ * @param {string} filePath
+ * @param {Number} shaderType
  * @private
  */
 SimpleShader.prototype._compileShader = function (filePath, shaderType) {
@@ -58,8 +58,8 @@ SimpleShader.prototype._compileShader = function (filePath, shaderType) {
 
 /**
  *
- * @param pixelColor
- * @param vpMatrix
+ * @param {Number[]} pixelColor
+ * @param {mat4} vpMatrix
  */
 SimpleShader.prototype.activateShader = function (pixelColor, vpMatrix) {
     var gl = gEngine.Core.getGL();
@@ -71,14 +71,28 @@ SimpleShader.prototype.activateShader = function (pixelColor, vpMatrix) {
 
 /**
  *
- * @param modelTransform
+ * @param {mat4} modelTransform
  */
 SimpleShader.prototype.loadObjectTransform = function (modelTransform) {
     var gl = gEngine.Core.getGL();
     gl.uniformMatrix4fv(this.mModelTransform, false, modelTransform);
 };
 
+/**
+ *
+ * @return {WebGLProgram|*|null}
+ */
 SimpleShader.prototype.getShader = function () {
     return this.mCompiledShader;
 };
 
+/**
+ *
+ */
+SimpleShader.prototype.cleanUp = function () {
+    var gl = gEngine.Core.getGL();
+    gl.detachShader(this.mCompiledShader, this.mVertexShader);
+    gl.detachShader(this.mCompiledShader, this.mFragmentShader);
+    gl.deleteShader(this.mVertexShader);
+    gl.deleteShader(this.mFragmentShader);
+};

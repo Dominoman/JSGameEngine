@@ -109,7 +109,7 @@ gEngine.Textures = (function () {
         unloadTexture: unloadTexture,
         activateTexture: activateTexture,
         deactivateTexture: deacivateTexture,
-        geTextureInfo: getTextureInfo
+        getTextureInfo: getTextureInfo
 
     };
     return mPublic;

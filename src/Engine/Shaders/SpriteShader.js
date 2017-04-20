@@ -5,8 +5,8 @@
 
 /**
  *
- * @param vertexShaderPath
- * @param fragmentShaderPath
+ * @param {string} vertexShaderPath
+ * @param {string} fragmentShaderPath
  * @constructor
  */
 function SpriteShader(vertexShaderPath, fragmentShaderPath) {
@@ -27,7 +27,7 @@ gEngine.Core.inheritPrototype(SpriteShader, TextureShader);
 
 /**
  *
- * @param texCoord
+ * @param {Number[]} texCoord
  */
 SpriteShader.prototype.setTextureCoordinate = function (texCoord) {
     var gl = gEngine.Core.getGL();
@@ -37,8 +37,8 @@ SpriteShader.prototype.setTextureCoordinate = function (texCoord) {
 
 /**
  *
- * @param pixelColor
- * @param vpMatrix
+ * @param {Number[]} pixelColor
+ * @param {mat4} vpMatrix
  */
 SpriteShader.prototype.activateShader = function (pixelColor, vpMatrix) {
     SimpleShader.prototype.activateShader.call(this, pixelColor, vpMatrix);
@@ -46,4 +46,13 @@ SpriteShader.prototype.activateShader = function (pixelColor, vpMatrix) {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.mTexCoordBuffer);
     gl.vertexAttribPointer(this.mShaderTextureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(this.mShaderTextureCoordAttribute);
+};
+
+/**
+ *
+ */
+SpriteShader.prototype.cleanUp = function () {
+    var gl = gEngine.Core.getGL();
+    gl.deleteBuffer(this.mTexCoordBuffer);
+    SimpleShader.prototype.cleanUp.call(this);
 };

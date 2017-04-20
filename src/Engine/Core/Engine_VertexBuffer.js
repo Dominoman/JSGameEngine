@@ -5,6 +5,9 @@
 
 var gEngine = gEngine || {};
 
+/**
+ *
+ */
 gEngine.VertexBuffer = (function () {
     var mSquareVertexBuffer = null;
     var mTextureCoordBuffer = null;
@@ -22,9 +25,18 @@ gEngine.VertexBuffer = (function () {
         0.0, 0.0
     ];
 
+    /**
+     *
+     * @return {WebGLBuffer}
+     */
     var getGLVertexRef = function () {
         return mSquareVertexBuffer;
     };
+
+    /**
+     *
+     * @return {WebGLBuffer}
+     */
     var getGLTexCoordRef = function () {
         return mTextureCoordBuffer;
     };
@@ -42,10 +54,20 @@ gEngine.VertexBuffer = (function () {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates), gl.STATIC_DRAW);
     };
 
+    /**
+     *
+     */
+    var cleanUp = function () {
+        var gl = gEngine.Core.getGL();
+        gl.deleteBuffer(mSquareVertexBuffer);
+        gl.deleteBuffer(mTextureCoordBuffer);
+    };
+
     var mPublic = {
         initialize: initialize,
         getGLVertexRef: getGLVertexRef,
-        getGLTexCoordRef: getGLTexCoordRef
+        getGLTexCoordRef: getGLTexCoordRef,
+        cleanUp: cleanUp
     };
     return mPublic;
 }());
