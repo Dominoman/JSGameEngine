@@ -133,3 +133,12 @@ GameObject.prototype.rotateObjPointTo = function (p, rate) {
     vec2.rotate(this.getCurrentFrontDir(), this.getCurrentFrontDir(), rad);
     this.getXform().incRotationByRad(rad);
 };
+
+/**
+ *
+ * @return {BoundingBox}
+ */
+GameObject.prototype.getBBox = function () {
+    var xform = this.getXform();
+    return new BoundingBox(xform.getPosition(), xform.getWidth(), xform.getHeight());
+};
