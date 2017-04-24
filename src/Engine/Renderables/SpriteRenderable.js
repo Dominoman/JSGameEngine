@@ -5,7 +5,7 @@
 
 /**
  *
- * @param myTexture
+ * @param {string} myTexture
  * @constructor
  */
 function SpriteRenderable(myTexture) {
@@ -27,10 +27,10 @@ SpriteRenderable.eTexCoordArray = Object.freeze({
 
 /**
  *
- * @param left
- * @param right
- * @param bottom
- * @param top
+ * @param {Number} left
+ * @param {Number} right
+ * @param {Number} bottom
+ * @param {Number} top
  */
 SpriteRenderable.prototype.setElementPixelPositions = function (left, right, bottom, top) {
     var texInfo = gEngine.ResourceMap.retrieveAsset(this.mTexture);
@@ -45,7 +45,7 @@ SpriteRenderable.prototype.setElementPixelPositions = function (left, right, bot
 
 /**
  *
- * @return {[*,*,*,*,*,*,*,*]}
+ * @return {Number[]}
  */
 SpriteRenderable.prototype.getElementUVCoordinateArray = function () {
     return [
@@ -58,10 +58,10 @@ SpriteRenderable.prototype.getElementUVCoordinateArray = function () {
 
 /**
  *
- * @param left
- * @param right
- * @param bottom
- * @param top
+ * @param {Number} left
+ * @param {Number} right
+ * @param {Number} bottom
+ * @param {Number} top
  */
 SpriteRenderable.prototype.setElementUVCoordinate = function (left, right, bottom, top) {
     this.mTexLeft = left;
@@ -72,10 +72,10 @@ SpriteRenderable.prototype.setElementUVCoordinate = function (left, right, botto
 
 /**
  *
- * @param pixelColor
- * @param vpMatrix
+ * @param {Number[]} pixelColor
+ * @param {Camera} aCamera
  */
-SpriteRenderable.prototype.draw = function (pixelColor, vpMatrix) {
+SpriteRenderable.prototype.draw = function (pixelColor, aCamera) {
     this.mShader.setTextureCoordinate(this.getElementUVCoordinateArray());
-    TextureRenderable.prototype.draw.call(this, pixelColor, vpMatrix);
+    TextureRenderable.prototype.draw.call(this, pixelColor, aCamera);
 };

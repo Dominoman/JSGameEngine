@@ -38,10 +38,10 @@ SpriteShader.prototype.setTextureCoordinate = function (texCoord) {
 /**
  *
  * @param {Number[]} pixelColor
- * @param {mat4} vpMatrix
+ * @param {Camera} aCamera
  */
-SpriteShader.prototype.activateShader = function (pixelColor, vpMatrix) {
-    SimpleShader.prototype.activateShader.call(this, pixelColor, vpMatrix);
+SpriteShader.prototype.activateShader = function (pixelColor, aCamera) {
+    SimpleShader.prototype.activateShader.call(this, pixelColor, aCamera);
     var gl = gEngine.Core.getGL();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.mTexCoordBuffer);
     gl.vertexAttribPointer(this.mShaderTextureCoordAttribute, 2, gl.FLOAT, false, 0, 0);

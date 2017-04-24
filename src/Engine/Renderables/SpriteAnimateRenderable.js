@@ -124,7 +124,7 @@ SpriteAnimateRenderable.prototype.updateAnimation = function () {
     if (this.mCurrentTick >= this.mUpdateInterval) {
         this.mCurrentTick = 0;
         this.mCurrentElm += this.mCurrentAnimAdvance;
-        if (this.mCurrentElm >= 0 && this.mCurrentElm < this.mNumElms) {
+        if (this.mCurrentElm >= 0 && this.mCurrentElm < this.mNumElems) {
             this._setSpriteElement();
         } else {
             this._initAnimation();

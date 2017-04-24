@@ -5,8 +5,8 @@
 
 /**
  *
- * @param vertexShaderPath
- * @param fragmentShaderPath
+ * @param {string} vertexShaderPath
+ * @param {string} fragmentShaderPath
  * @constructor
  */
 function TextureShader(vertexShaderPath, fragmentShaderPath) {
@@ -19,11 +19,11 @@ gEngine.Core.inheritPrototype(TextureShader, SimpleShader);
 
 /**
  *
- * @param pixelColor
- * @param vpMatrix
+ * @param {Number[]} pixelColor
+ * @param {Camera} aCamera
  */
-TextureShader.prototype.activateShader = function (pixelColor, vpMatrix) {
-    SimpleShader.prototype.activateShader.call(this, pixelColor, vpMatrix);
+TextureShader.prototype.activateShader = function (pixelColor, aCamera) {
+    SimpleShader.prototype.activateShader.call(this, pixelColor, aCamera.getVPMatrix());
     var gl = gEngine.Core.getGL();
     gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLTexCoordRef());
     gl.enableVertexAttribArray(this.mShaderTextureCoordAttribute);

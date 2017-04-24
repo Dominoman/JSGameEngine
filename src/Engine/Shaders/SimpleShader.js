@@ -59,12 +59,12 @@ SimpleShader.prototype._compileShader = function (filePath, shaderType) {
 /**
  *
  * @param {Number[]} pixelColor
- * @param {mat4} vpMatrix
+ * @param {Camera} aCamera
  */
-SimpleShader.prototype.activateShader = function (pixelColor, vpMatrix) {
+SimpleShader.prototype.activateShader = function (pixelColor, aCamera) {
     var gl = gEngine.Core.getGL();
     gl.useProgram(this.mCompiledShader);
-    gl.uniformMatrix4fv(this.mViewProjTransform, false, vpMatrix);
+    gl.uniformMatrix4fv(this.mViewProjTransform, false, aCamera.getVPMatrix());
     gl.enableVertexAttribArray(this.mShaderVertexPositionAttribute);
     gl.uniform4fv(this.mPixelColor, pixelColor);
 };

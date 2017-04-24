@@ -5,7 +5,7 @@
 
 /**
  *
- * @param myTexture
+ * @param {string} myTexture
  * @constructor
  */
 function TextureRenderable(myTexture) {
@@ -18,11 +18,11 @@ gEngine.Core.inheritPrototype(TextureRenderable, Renderable);
 
 /**
  *
- * @param vpMatrix
+ * @param {Camera} aCamera
  */
-TextureRenderable.prototype.draw = function (vpMatrix) {
+TextureRenderable.prototype.draw = function (aCamera) {
     gEngine.Textures.activateTexture(this.mTexture);
-    Renderable.prototype.draw.call(this, vpMatrix);
+    Renderable.prototype.draw.call(this, aCamera);
 };
 
 TextureRenderable.prototype.getTexture = function () {
