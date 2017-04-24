@@ -17,8 +17,13 @@ function MyGame() {
 
     // the hero and the support objects
     this.mHero = null;
-    this.mMinionset = null;
-    this.mDyePack = null;
+    this.mBrain = null;
+
+    // mode of running:
+    //   H: Player drive brain
+    //   J: Dye drive brain, immediate orientation change
+    //   K: Dye drive brain, gradual orientation change
+    this.mMode = 'H';
 }
 gEngine.Core.inheritPrototype(MyGame,Scene);
 
@@ -62,28 +67,50 @@ MyGame.prototype.initialize = function () {
         [0, 0, 640, 480]           // viewport (orgX, orgY, width, height)
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
+    // sets the background to gray
 
-    this.mDyePack = new DyePack(this.kMinionSprite);
-    this.mMinionset = new GameObjectSet();
-    for (var i = 0; i < 5; i++) {
-        var randomY = Math.random() * 65;
-        var aMinion = new Minion(this.kMinionSprite, randomY);
-        this.mMinionset.addToSet(aMinion);
-    }
+    // Create the brain
+    this.mBrain = new Brain(this.kMinionSprite);
+
+    //  Create the hero object
     this.mHero = new Hero(this.kMinionSprite);
-    this.mMsg = new FontRenderable("Status message");
+
+    // For echoing
+    this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([0, 0, 0, 1]);
     this.mMsg.getXform().setPosition(1, 2);
-    this.mMsg.setTextHeight();
+    this.mMsg.setTextHeight(3);
 };
 
 /**
  *
  */
 MyGame.prototype.update = function () {
+    var msg = "Brian modes [H:keys,J:immediate,K:gradual";
+    var rate = 1;
+
     this.mHero.update();
-    this.mMinionset.update();
-    this.mDyePack.update();
+
+    switch (this.mMode) {
+        case 'H':
+            this.mBrain.update();
+            break;
+        case 'K':
+            rate = 0.02;
+        case 'J':
+            this.mBrain.rotateObjPointTo(this.mHero.getXform().getPosition(), rate);
+            GameObject.prototype.update.call(this.mBrain);
+            break;
+    }
+
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.H))
+        this.mMode = 'H';
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.J))
+        this.mMode = 'J';
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.K))
+        this.mMode = 'K';
+
+    this.mMsg.setText(msg + this.mMode);
 };
 
 /**
@@ -96,9 +123,8 @@ MyGame.prototype.draw = function () {
     // Step  B: Activate the drawing Camera
     this.mCamera.setupViewProjection();
 
-    // Step  C: draw everything
+    // Step  C: Draw everything
     this.mHero.draw(this.mCamera);
-    this.mMinionset.draw(this.mCamera);
-    this.mDyePack.draw(this.mCamera);
+    this.mBrain.draw(this.mCamera);
     this.mMsg.draw(this.mCamera);
 };
