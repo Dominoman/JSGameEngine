@@ -5,10 +5,10 @@
 
 /**
  *
- * @param name
- * @param w
- * @param h
- * @param id
+ * @param {string} name
+ * @param {number} w
+ * @param {number} h
+ * @param {*} id
  * @constructor
  */
 function TextureInfo(name, w, h, id) {
@@ -16,6 +16,7 @@ function TextureInfo(name, w, h, id) {
     this.mWidth = w;
     this.mHeight = h;
     this.mGLTexID = id;
+    this.mColorArray = null;
 }
 
 var gEngine = gEngine || {};
@@ -27,7 +28,7 @@ gEngine.Textures = (function () {
 
     /**
      *
-     * @param textureName
+     * @param {string} textureName
      */
     var loadTexture = function (textureName) {
         if (!gEngine.ResourceMap.isAssetLoaded(textureName)) {
@@ -44,7 +45,7 @@ gEngine.Textures = (function () {
 
     /**
      *
-     * @param textureName
+     * @param {string} textureName
      */
     var unloadTexture = function (textureName) {
         var gl = gEngine.Core.getGL();
@@ -55,8 +56,8 @@ gEngine.Textures = (function () {
 
     /**
      *
-     * @param textureName
-     * @param image
+     * @param {string} textureName
+     * @param {Image} image
      * @private
      */
     var _processLoadedImage = function (textureName, image) {
@@ -71,7 +72,7 @@ gEngine.Textures = (function () {
 
     /**
      *
-     * @param textureName
+     * @param {string} textureName
      */
     var activateTexture = function (textureName) {
         var gl = gEngine.Core.getGL();
@@ -97,11 +98,36 @@ gEngine.Textures = (function () {
 
     /**
      *
-     * @param textureName
-     * @return {*}
+     * @param {string} textureName
+     * @return {TextureInfo}
      */
     var getTextureInfo = function (textureName) {
         return gEngine.ResourceMap.retrieveAsset(textureName);
+    };
+
+    /**
+     *
+     * @param {string} textureName
+     * @return {Uint8Array|*}
+     */
+    var getColorArray = function (textureName) {
+        var texInfo = getTextureInfo(textureName);
+        if (texInfo.mColorArray === null) {
+            var gl = gEngine.Core.getGL();
+            var fb = gl.createFramebuffer();
+            gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texInfo.mGLTexID, 0);
+            if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE) {
+                var pixels = new Uint8Array(texInfo.mWidth * texInfo.mHeight * 4);
+                gl.readPixels(0, 0, texInfo.mWidth, texInfo.mHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                texInfo.mColorArray = pixels;
+            } else {
+                alert("WARNING: Engine.Textures.getColorArray() failed!");
+            }
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.deleteFramebuffer(fb);
+        }
+        return texInfo.mColorArray;
     };
 
     var mPublic = {
@@ -109,7 +135,8 @@ gEngine.Textures = (function () {
         unloadTexture: unloadTexture,
         activateTexture: activateTexture,
         deactivateTexture: deacivateTexture,
-        getTextureInfo: getTextureInfo
+        getTextureInfo: getTextureInfo,
+        getColorArray: getColorArray
 
     };
     return mPublic;

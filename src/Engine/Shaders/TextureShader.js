@@ -23,7 +23,7 @@ gEngine.Core.inheritPrototype(TextureShader, SimpleShader);
  * @param {Camera} aCamera
  */
 TextureShader.prototype.activateShader = function (pixelColor, aCamera) {
-    SimpleShader.prototype.activateShader.call(this, pixelColor, aCamera.getVPMatrix());
+    SimpleShader.prototype.activateShader.call(this, pixelColor, aCamera);
     var gl = gEngine.Core.getGL();
     gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLTexCoordRef());
     gl.enableVertexAttribArray(this.mShaderTextureCoordAttribute);
