@@ -9,8 +9,10 @@
  * @param {number} dy
  */
 Camera.prototype.panBy = function (dx, dy) {
-    this.mWCCenter[0] += dx;
-    this.mWCCenter[1] += dy;
+    var newC = vec2.clone(this.getWCCenter());
+    newC[0] += dx;
+    newC[1] += dy;
+    this.mCameraState.setCenter(newC);
 };
 
 /**
@@ -49,7 +51,7 @@ Camera.prototype.panWith = function (aXform, zone) {
  */
 Camera.prototype.zoomBy = function (zoom) {
     if (zoom > 0)
-        this.mWCWidth *= zoom;
+        this.setWCWidth(this.getWCWidth() * zoom);
 };
 
 /**
@@ -65,3 +67,18 @@ Camera.prototype.zoomTowards = function (pos, zoom) {
     this.zoomBy(zoom);
 };
 
+/**
+ *
+ */
+Camera.prototype.update = function () {
+    this.mCameraState.updateCameraState();
+};
+
+/**
+ *
+ * @param {number} stiffness
+ * @param {number} duration
+ */
+Camera.prototype.configInterpolation = function (stiffness, duration) {
+    this.mCameraState.configInterpolation(stiffness, duration);
+};

@@ -11,8 +11,7 @@
  * @constructor
  */
 function Camera(wcCenter, wcWidth, viewportArray) {
-    this.mWCCenter = wcCenter;
-    this.mWCWidth = wcWidth;
+    this.mCameraState = new CameraState(wcCenter, wcWidth);
     this.mViewport = viewportArray;
     this.mNearPlane = 0;
     this.mFarPlane = 1000;
@@ -24,14 +23,21 @@ function Camera(wcCenter, wcWidth, viewportArray) {
     this.mBGColor = [0.8, 0.8, 0.8, 1];
 }
 
+Camera.eViewport = Object.freeze({
+    eOrgX: 0,
+    eOrgY: 1,
+    eWidth: 2,
+    eHeight: 3
+});
+
 /**
  *
  * @param {number} xPos
  * @param {number} yPos
  */
 Camera.prototype.setWCCenter = function (xPos, yPos) {
-    this.mWCCenter[0] = xPos;
-    this.mWCCenter[1] = yPos;
+    var p = vec2.fromValues(xPos, yPos);
+    this.mCameraState.setCenter(p);
 };
 
 /**
@@ -39,7 +45,7 @@ Camera.prototype.setWCCenter = function (xPos, yPos) {
  * @return {vec2}
  */
 Camera.prototype.getWCCenter = function () {
-    return this.mWCCenter;
+    return this.mCameraState.getCenter();
 };
 
 /**
@@ -47,7 +53,7 @@ Camera.prototype.getWCCenter = function () {
  * @param {number} width
  */
 Camera.prototype.setWCWidth = function (width) {
-    this.mWCWidth = width;
+    this.mCameraState.setWidth(width);
 };
 
 /**
@@ -55,7 +61,7 @@ Camera.prototype.setWCWidth = function (width) {
  * @return {number}
  */
 Camera.prototype.getWCWidth = function () {
-    return this.mWCWidth;
+    return this.mCameraState.getWidth();
 };
 
 /**
@@ -63,7 +69,7 @@ Camera.prototype.getWCWidth = function () {
  * @return {number}
  */
 Camera.prototype.getWCHeight = function () {
-    return this.mWCWidth * this.mViewport[3] / this.mViewport[4];
+    return this.mCameraState.getWidth() * this.mViewport[3] / this.mViewport[4];
 };
 
 /**
@@ -118,12 +124,13 @@ Camera.prototype.setupViewProjection = function () {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.disable(gl.SCISSOR_TEST);
 
+    var center = this.mCameraState.getCenter();
     mat4.lookAt(this.mViewMatrix,
-        [this.mWCCenter[0], this.mWCCenter[1], 10],
-        [this.mWCCenter[0], this.mWCCenter[1], 0],
+        [center[0], center[1], 10],
+        [center[0], center[1], 0],
         [0, 1, 0]);
 
-    var halfWCWidth = 0.5 * this.mWCWidth;
+    var halfWCWidth = 0.5 * this.mCameraState.getWidth();
     var halfWCHeight = halfWCWidth * this.mViewport[3] / this.mViewport[2];
 
     mat4.ortho(this.mProjMatrix, -halfWCWidth, halfWCWidth, -halfWCHeight, halfWCHeight, this.mNearPlane, this.mFarPlane);

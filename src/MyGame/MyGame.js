@@ -109,6 +109,8 @@ MyGame.prototype.update = function () {
     var zoomDelta = 0.05;
     var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
 
+    this.mCamera.update();
+
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();
 
