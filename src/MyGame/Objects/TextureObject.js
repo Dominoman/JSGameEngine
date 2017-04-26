@@ -35,7 +35,4 @@ TextureObject.prototype.update = function (up, down, left, right, rot) {
     if (gEngine.Input.isKeyPressed(right)) {
         xform.incXPosBy(this.kDelta);
     }
-    if (gEngine.Input.isKeyPressed(rot)) {
-        xform.incRotationByRad(this.kRDelta);
-    }
 };

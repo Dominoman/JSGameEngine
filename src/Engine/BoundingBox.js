@@ -63,7 +63,7 @@ BoundingBox.prototype.intersectsBound = function (otherBound) {
  */
 BoundingBox.prototype.boundCollideStatus = function (otherBound) {
     var status = BoundingBox.eboundCollideStatus.eOutside;
-    if (this.intersectBound(otherBound)) {
+    if (this.intersectsBound(otherBound)) {
         if (otherBound.minX() < this.minX())
             status |= BoundingBox.eboundCollideStatus.eCollideLeft;
         if (otherBound.maxX() > this.maxX())

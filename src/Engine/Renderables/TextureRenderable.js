@@ -10,7 +10,7 @@
  */
 function TextureRenderable(myTexture) {
     Renderable.call(this);
-    Renderable.prototype.setColor(this, [1, 1, 1, 0]);
+    Renderable.prototype.setColor.call(this, [1, 1, 1, 0]);
     Renderable.prototype._setShader.call(this, gEngine.DefaultResources.getTextureShader());
     this.mTexture = null;
     this.mTextureInfo = null;
