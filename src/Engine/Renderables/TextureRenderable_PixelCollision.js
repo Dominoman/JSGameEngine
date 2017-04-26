@@ -19,6 +19,8 @@ TextureRenderable.prototype.setColorArray = function () {
  * @private
  */
 TextureRenderable.prototype._pixelAlphaValue = function (x, y) {
+    y += this.mTexBottomIndex;
+    x += this.mTexLeftIndex;
     x = x * 4;
     y = y * 4;
     return this.mColorArray[y * this.mTextureInfo.mWidth + x + 3];

@@ -15,6 +15,7 @@ function SpriteRenderable(myTexture) {
     this.mTexRight = 1.0;
     this.mTexTop = 1.0;
     this.mTexBottom = 0.0;
+    this._setTexInfo();
 }
 gEngine.Core.inheritPrototype(SpriteRenderable, TextureRenderable);
 
@@ -41,6 +42,7 @@ SpriteRenderable.prototype.setElementPixelPositions = function (left, right, bot
     this.mTexRight = right / imageW;
     this.mTexBottom = bottom / imageH;
     this.mTexTop = top / imageH;
+    this._setTexInfo();
 };
 
 /**
@@ -68,6 +70,7 @@ SpriteRenderable.prototype.setElementUVCoordinate = function (left, right, botto
     this.mTexRight = right;
     this.mTexBottom = bottom;
     this.mTexTop = top;
+    this._setTexInfo();
 };
 
 /**
