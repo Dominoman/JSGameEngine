@@ -52,7 +52,7 @@ BoundingBox.prototype.containsPoint = function (x, y) {
  * @param {BoundingBox} otherBound
  * @return {boolean}
  */
-BoundingBox.prototype.intersectBound = function (otherBound) {
+BoundingBox.prototype.intersectsBound = function (otherBound) {
     return this.minX() < otherBound.maxX() && this.maxX() > otherBound.minX() && this.minY() < otherBound.maxY() && this.maxY() > otherBound.minY();
 };
 
