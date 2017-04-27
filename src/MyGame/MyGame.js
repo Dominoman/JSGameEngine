@@ -15,6 +15,8 @@ function MyGame() {
 
     // The camera to view the scene
     this.mCamera = null;
+    this.mHeroCam = null;
+    this.mBrainCam = null;
     this.mBg = null;
 
     this.mMsg = null;
@@ -60,6 +62,13 @@ MyGame.prototype.initialize = function () {
         [0, 0, 640, 480]           // viewport (orgX, orgY, width, height)
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
+    this.mHeroCam = new Camera(vec2.fromValues(50, 30), 20, [490, 330, 150, 150], 2);
+    this.mHeroCam.setBackgroundColor([0.5, 0.5, 0.5, 1]);
+
+    this.mBrainCam = new Camera(vec2.fromValues(50, 30), 10, [0, 330, 150, 150], 2);
+    this.mBrainCam.setBackgroundColor([1, 1, 1, 1]);
+    this.mBrainCam.configInterpolation(0.7, 10);
+
     // sets the background to gray
 
     // Large background image
@@ -90,17 +99,10 @@ MyGame.prototype.draw = function () {
 // Step A: clear the canvas
     gEngine.Core.clearCanvas([0, 1, 0, 1.0]); // clear to bright green
 
-    // Step  B: Activate the drawing Cameras
-    this.mCamera.setupViewProjection();
-
-    // Step  C: Draw everything
-    this.mBg.draw(this.mCamera);
-    this.mHero.draw(this.mCamera);
-    this.mBrain.draw(this.mCamera);
-    this.mPortal.draw(this.mCamera);
-    this.mLMinion.draw(this.mCamera);
-    this.mRMinion.draw(this.mCamera);
+    this.drawCamera(this.mCamera);
     this.mMsg.draw(this.mCamera);
+    this.drawCamera(this.mHeroCam);
+    this.drawCamera(this.mBrainCam);
 };
 
 /**
@@ -111,6 +113,8 @@ MyGame.prototype.update = function () {
     var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
 
     this.mCamera.update();
+    this.mHeroCam.update();
+    this.mBrainCam.update();
 
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();
@@ -172,6 +176,29 @@ MyGame.prototype.update = function () {
     this.mCamera.clampAtBoundary(this.mPortal.getXform(), 0.8);
     this.mCamera.panWith(this.mHero.getXform(), 0.9);
 
+    this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
+    this.mBrainCam.panTo(this.mBrain.getXform().getXPos(), this.mBrain.getXform().getYPos());
+
+    var v = this.mHeroCam.getViewport();
+    v[0] += 1;
+    if (v[0] > 500) {
+        v[0] = 0;
+    }
+    this.mHeroCam.setViewport(v);
+
     this.mMsg.setText(msg + this.mChoice);
 };
 
+/**
+ *
+ * @param {Camera} camera
+ */
+MyGame.prototype.drawCamera = function (camera) {
+    camera.setupViewProjection();
+    this.mBg.draw(camera);
+    this.mHero.draw(camera);
+    this.mBrain.draw(camera);
+    this.mPortal.draw(camera);
+    this.mLMinion.draw(camera);
+    this.mRMinion.draw(camera);
+};

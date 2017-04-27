@@ -9,12 +9,19 @@
  * @param {vec2} wcCenter
  * @param {number} wcWidth
  * @param {array} viewportArray
+ * @param {number} bound
  * @constructor
  */
-function Camera(wcCenter, wcWidth, viewportArray) {
+function Camera(wcCenter, wcWidth, viewportArray, bound) {
     this.mCameraState = new CameraState(wcCenter, wcWidth);
     this.mCameraShake = null;
-    this.mViewport = viewportArray;
+    this.mViewport = [];
+    this.mViewportBound = 0;
+    if (bound !== undefined) {
+        this.mViewportBound = bound;
+    }
+    this.mScissorBound = [];
+    this.setViewport(viewportArray, this.mViewportBound);
     this.mNearPlane = 0;
     this.mFarPlane = 1000;
 
@@ -77,9 +84,20 @@ Camera.prototype.getWCHeight = function () {
 /**
  *
  * @param {array} viewportArray
+ * @param {number} bound
  */
-Camera.prototype.setViewport = function (viewportArray) {
-    this.mViewport = viewportArray;
+Camera.prototype.setViewport = function (viewportArray, bound) {
+    if (bound === undefined) {
+        bound = this.mViewportBound;
+    }
+    this.mViewport[0] = viewportArray[0] + bound;
+    this.mViewport[1] = viewportArray[1] + bound;
+    this.mViewport[2] = viewportArray[2] - 2 * bound;
+    this.mViewport[3] = viewportArray[3] - 2 * bound;
+    this.mScissorBound[0] = viewportArray[0];
+    this.mScissorBound[1] = viewportArray[1];
+    this.mScissorBound[2] = viewportArray[2];
+    this.mScissorBound[3] = viewportArray[3];
 };
 
 /**
@@ -87,7 +105,12 @@ Camera.prototype.setViewport = function (viewportArray) {
  * @return {array|*}
  */
 Camera.prototype.getViewport = function () {
-    return this.mViewport;
+    var out = [];
+    out[0] = this.mScissorBound[0];
+    out[1] = this.mScissorBound[1];
+    out[2] = this.mScissorBound[2];
+    out[3] = this.mScissorBound[3];
+    return out;
 };
 
 /**
@@ -120,7 +143,7 @@ Camera.prototype.getVPMatrix = function () {
 Camera.prototype.setupViewProjection = function () {
     var gl = gEngine.Core.getGL();
     gl.viewport(this.mViewport[0], this.mViewport[1], this.mViewport[2], this.mViewport[3]);
-    gl.scissor(this.mViewport[0], this.mViewport[1], this.mViewport[2], this.mViewport[3]);
+    gl.scissor(this.mScissorBound[0], this.mScissorBound[1], this.mScissorBound[2], this.mScissorBound[3]);
     gl.clearColor(this.mBGColor[0], this.mBGColor[1], this.mBGColor[2], this.mBGColor[3]);
     gl.enable(gl.SCISSOR_TEST);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -180,3 +203,4 @@ Camera.prototype.clampAtBoundary = function (aXform, zone) {
     }
     return status;
 };
+
