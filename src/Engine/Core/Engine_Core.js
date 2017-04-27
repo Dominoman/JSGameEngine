@@ -19,7 +19,7 @@ gEngine.Core = (function () {
     var initializeEngineCore = function (htmlCanvasID, myGame) {
         _initializeWebGL(htmlCanvasID);
         gEngine.VertexBuffer.initialize();
-        gEngine.Input.initialize();
+        gEngine.Input.initialize(htmlCanvasID);
         gEngine.DefaultResources.initialize(function () {
             startScene(myGame);
         });
@@ -67,7 +67,7 @@ gEngine.Core = (function () {
     var inheritPrototype=function (subClass,superClass) {
         var prototype=Object.create(superClass.prototype);
         prototype.constructor=subClass;
-        subClass.prototype=prototype
+        subClass.prototype = prototype;
     };
 
     /**

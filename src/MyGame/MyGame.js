@@ -186,7 +186,30 @@ MyGame.prototype.update = function () {
     }
     this.mHeroCam.setViewport(v);
 
-    this.mMsg.setText(msg + this.mChoice);
+    msg = "";
+    if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left)) {
+        msg += "[L down]";
+        if (this.mCamera.isMouseInViewport()) {
+            this.mPortal.getXform().setXPos(this.mCamera.mouseWCX());
+            this.mPortal.getXform().setYPos(this.mCamera.mouseWCY());
+        }
+    }
+    if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Middle)) {
+        if (this.mHeroCam.isMouseInViewport()) {
+            this.mHero.getXform().setXPos(this.mCamera.mouseWCX());
+            this.mHero.getXform().setYPos(this.mCamera.mouseWCY());
+        }
+    }
+
+    if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Right)) {
+        this.mPortal.setVisibility(false);
+    }
+
+    if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Middle)) {
+        this.mPortal.setVisibility(true);
+    }
+
+    this.mMsg.setText(msg);
 };
 
 /**
