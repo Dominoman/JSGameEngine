@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 15..
  */
+/* globals SimpleShader, TextureShader, SpriteShader, vec4 */
 "use strict";
 
 var gEngine = gEngine || {};
@@ -52,6 +53,40 @@ gEngine.DefaultResources = (function () {
         return kDefaultFont;
     };
 
+    var mGlobalAmbientColor = [0.3, 0.3, 0.3, 1];
+    var mGlobalAmbientIntensity = 1;
+
+    /**
+     *
+     * @return {[number,number,number,number]}
+     */
+    var getGlobalAmbientColor = function () {
+        return mGlobalAmbientColor;
+    };
+
+    /**
+     *
+     * @param {[number,number,number,number]} v
+     */
+    var setGlobalAmbientColor = function (v) {
+        mGlobalAmbientColor = vec4.fromValues(v[0], v[1], v[2], v[3]);
+    };
+
+    /**
+     *
+     * @return {number}
+     */
+    var getGlobalAmbientIntensity = function () {
+        return mGlobalAmbientIntensity;
+    };
+
+    /**
+     *
+     * @param {number} v
+     */
+    var setGlobalAmbientIntensity = function (v) {
+        mGlobalAmbientIntensity = v;
+    };
 
     /**
      *
@@ -103,6 +138,10 @@ gEngine.DefaultResources = (function () {
         getTextureShader: getTextureShader,
         getSpriteShader: getSpriteShader,
         getDefaultFont: getDefaultFont,
+        getGlobalAmbientColor: getGlobalAmbientColor,
+        setGlobalAmbientColor: setGlobalAmbientColor,
+        getGlobalAmbientIntensity: getGlobalAmbientIntensity,
+        setGlobalAmbientIntensity: setGlobalAmbientIntensity,
         cleanUp: cleanUp
     };
     return mPublic;

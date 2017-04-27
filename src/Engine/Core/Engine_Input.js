@@ -159,6 +159,14 @@ gEngine.Input = (function () {
         window.addEventListener('mouseup', _onMouseUp);
         window.addEventListener('mousemove', _onMouseMove);
         mCanvas = document.getElementById(canvasID);
+
+        //Disable right click!
+        mCanvas.addEventListener('contextmenu', function (e) {
+            if (e.button === 2) {
+                e.preventDefault();
+                return false;
+            }
+        }, false);
     };
 
     /**

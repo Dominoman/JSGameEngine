@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 18..
  */
+/* globals TextureRenderable, Renderable, gEngine */
 "use strict";
 
 /**
