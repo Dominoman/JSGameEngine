@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 24..
  */
+/* global SpriteRenderable, GameObject, gEngine, vec2, */
 "use strict";
 
 /**

@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 26..
  */
+/* global Camera, vec2, BoundingBox, CameraShake */
 "use strict";
 
 /**
@@ -61,9 +62,9 @@ Camera.prototype.zoomBy = function (zoom) {
  */
 Camera.prototype.zoomTowards = function (pos, zoom) {
     var delta = [];
-    vec2.sub(delta, pos, this.mWCCenter);
+    vec2.sub(delta, pos, this.getWCCenter());
     vec2.scale(delta, delta, zoom - 1);
-    vec2.sub(this.mWCCenter, this.mWCCenter, delta);
+    vec2.sub(this.getWCCenter(), this.getWCCenter(), delta);
     this.zoomBy(zoom);
 };
 
@@ -71,6 +72,14 @@ Camera.prototype.zoomTowards = function (pos, zoom) {
  *
  */
 Camera.prototype.update = function () {
+    if (this.mCameraShake !== null) {
+        if (this.mCameraShake.shakeDone()) {
+            this.mCameraShake = null;
+        } else {
+            this.mCameraShake.setRefCenter(this.getWCCenter());
+            this.mCameraShake.updateShakeState();
+        }
+    }
     this.mCameraState.updateCameraState();
 };
 
@@ -81,4 +90,15 @@ Camera.prototype.update = function () {
  */
 Camera.prototype.configInterpolation = function (stiffness, duration) {
     this.mCameraState.configInterpolation(stiffness, duration);
+};
+
+/**
+ *
+ * @param {number} xDelta
+ * @param {number} yDelta
+ * @param {number} shakeFrequency
+ * @param {number} duration
+ */
+Camera.prototype.shake = function (xDelta, yDelta, shakeFrequency, duration) {
+    this.mCameraShake = new CameraShake(this.mCameraState, xDelta, yDelta, shakeFrequency, duration);
 };

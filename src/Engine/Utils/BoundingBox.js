@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 24..
  */
+/* globals vec2 */
 "use strict";
 
 /**

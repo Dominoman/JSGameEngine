@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 13..
  */
+/* globals gEngine,Scene, Camera, vec2, SpriteRenderable, GameObject, Brain, Hero, TextureObject, Minion, FontRenderable */
 "use strict";
 
 /**
@@ -161,6 +162,9 @@ MyGame.prototype.update = function () {
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.K)) {
         this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 + zoomDelta);
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)) {
+        this.mCamera.shake(-2, -2, 20, 30);
     }
 
     // interaction with the WC bound

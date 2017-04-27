@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 15..
  */
+/* global CameraState, mat4, vec2, gEngine, BoundingBox */
 "use strict";
 
 /**
@@ -12,6 +13,7 @@
  */
 function Camera(wcCenter, wcWidth, viewportArray) {
     this.mCameraState = new CameraState(wcCenter, wcWidth);
+    this.mCameraShake = null;
     this.mViewport = viewportArray;
     this.mNearPlane = 0;
     this.mFarPlane = 1000;
@@ -124,7 +126,13 @@ Camera.prototype.setupViewProjection = function () {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.disable(gl.SCISSOR_TEST);
 
-    var center = this.mCameraState.getCenter();
+    var center = [];
+    if (this.mCameraShake !== null) {
+        center = this.mCameraShake.getCenter();
+    } else {
+        center = this.getWCCenter();
+    }
+
     mat4.lookAt(this.mViewMatrix,
         [center[0], center[1], 10],
         [center[0], center[1], 0],
