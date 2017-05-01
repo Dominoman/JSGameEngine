@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 21..
  */
+/* globals LightRenderable, GameObject, gEngine*/
 "use strict";
 
 /**
@@ -11,7 +12,7 @@
 function Hero(spriteTexture) {
     this.kDelta = 0.3;
 
-    this.mDye = new SpriteRenderable(spriteTexture);
+    this.mDye = new LightRenderable(spriteTexture);
     this.mDye.setColor([1, 1, 1, 0]);
     this.mDye.getXform().setPosition(35, 50);
     this.mDye.getXform().setSize(9, 12);

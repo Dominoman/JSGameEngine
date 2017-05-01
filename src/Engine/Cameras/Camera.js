@@ -6,6 +6,16 @@
 
 /**
  *
+ * @constructor
+ */
+function PerRenderCache() {
+    this.mWCToPixelRatio = 1;  // WC to pixel transformation
+    this.mCameraOrgX = 1; // Lower-left corner of camera in WC
+    this.mCameraOrgY = 1;
+}
+
+/**
+ *
  * @param {vec2} wcCenter
  * @param {number} wcWidth
  * @param {array} viewportArray
@@ -13,23 +23,35 @@
  * @constructor
  */
 function Camera(wcCenter, wcWidth, viewportArray, bound) {
+    // WC and viewport position and size
     this.mCameraState = new CameraState(wcCenter, wcWidth);
     this.mCameraShake = null;
-    this.mViewport = [];
+
+    this.mViewport = [];  // [x, y, width, height]
     this.mViewportBound = 0;
     if (bound !== undefined) {
         this.mViewportBound = bound;
     }
-    this.mScissorBound = [];
+    this.mScissorBound = [];  // use for bounds
     this.setViewport(viewportArray, this.mViewportBound);
     this.mNearPlane = 0;
     this.mFarPlane = 1000;
 
+    // transformation matrices
     this.mViewMatrix = mat4.create();
     this.mProjMatrix = mat4.create();
     this.mVPMatrix = mat4.create();
 
-    this.mBGColor = [0.8, 0.8, 0.8, 1];
+    // background color
+    this.mBgColor = [0.8, 0.8, 0.8, 1]; // RGB and Alpha
+
+    // per-rendering cached information
+    // needed for computing transforms for shaders
+    // updated each time in SetupViewProjection()
+    this.mRenderCache = new PerRenderCache();
+    // SHOULD NOT be used except
+    // xform operations during the rendering
+    // Client game should not access this!
 }
 
 Camera.eViewport = Object.freeze({
@@ -78,7 +100,7 @@ Camera.prototype.getWCWidth = function () {
  * @return {number}
  */
 Camera.prototype.getWCHeight = function () {
-    return this.mCameraState.getWidth() * this.mViewport[3] / this.mViewport[4];
+    return this.mCameraState.getWidth() * this.mViewport[Camera.eViewport.eHeight] / this.mViewport[Camera.eViewport.eWidth];
 };
 
 /**
@@ -166,6 +188,9 @@ Camera.prototype.setupViewProjection = function () {
 
     mat4.ortho(this.mProjMatrix, -halfWCWidth, halfWCWidth, -halfWCHeight, halfWCHeight, this.mNearPlane, this.mFarPlane);
     mat4.multiply(this.mVPMatrix, this.mProjMatrix, this.mViewMatrix);
+    this.mRenderCache.mWCToPixelRatio = this.mViewport[Camera.eViewport.eWidth] / this.getWCWidth();
+    this.mRenderCache.mCameraOrgX = center[0] - (this.getWCWidth() / 2);
+    this.mRenderCache.mCameraOrgY = center[1] - (this.getWCHeight() / 2);
 };
 
 /**
