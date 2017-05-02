@@ -11,7 +11,9 @@
 function Light() {
     this.mColor = vec4.fromValues(0.1, 0.1, 0.1, 1);
     this.mPosition = vec3.fromValues(0, 0, 5);
-    this.mRadius = 10;
+    this.mNear = 5;
+    this.mFar = 10;
+    this.mIntensity = 1;
     this.mIsOn = true;
 }
 
@@ -75,24 +77,57 @@ Light.prototype.getPosition = function () {
  *
  * @param {number} r
  */
-Light.prototype.setRadius = function (r) {
-    this.mRadius = r;
+Light.prototype.setNear = function (r) {
+    this.mNear = r;
 };
 
 /**
  *
  * @return {number|*}
  */
-Light.prototype.getRadius = function () {
-    return this.mRadius;
+Light.prototype.getNear = function () {
+    return this.mNear;
 };
 
 /**
  *
- * @param {boolean} isOn
+ * @param {number} r
  */
-Light.prototype.setLightOn = function (isOn) {
-    this.mIsOn = isOn;
+Light.prototype.setFar = function (r) {
+    this.mFar = r;
+};
+
+/**
+ *
+ * @return {number|*}
+ */
+Light.prototype.getFar = function () {
+    return this.mFar;
+};
+
+/**
+ *
+ * @param {number} r
+ */
+Light.prototype.setIntensity = function (r) {
+    this.mIntensity = r;
+};
+
+/**
+ *
+ * @return {number|*}
+ */
+Light.prototype.getIntensity = function () {
+    return this.mIntensity;
+};
+
+
+/**
+ *
+ * @param {boolean} on
+ */
+Light.prototype.setLightTo = function (on) {
+    this.mIsOn = on;
 };
 
 /**

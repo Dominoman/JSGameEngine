@@ -12,7 +12,7 @@
 function LightRenderable(myTexture) {
     SpriteAnimateRenderable.call(this, myTexture);
     Renderable.prototype._setShader.call(this, gEngine.DefaultResources.getLightShader());
-    this.mLight = null;
+    this.mLights = [];
 }
 gEngine.Core.inheritPrototype(LightRenderable, SpriteAnimateRenderable);
 
@@ -21,16 +21,17 @@ gEngine.Core.inheritPrototype(LightRenderable, SpriteAnimateRenderable);
  * @param {Camera} aCamera
  */
 LightRenderable.prototype.draw = function (aCamera) {
-    this.mShader.setLight(this.mLight);
+    this.mShader.setLights(this.mLights);
     SpriteAnimateRenderable.prototype.draw.call(this, aCamera);
 };
 
 /**
  *
+ * @param {number} index
  * @return {Light}
  */
-LightRenderable.prototype.getLight = function () {
-    return this.mLight;
+LightRenderable.prototype.getLightAt = function (index) {
+    return this.mLights[index];
 };
 
 /**
@@ -38,5 +39,5 @@ LightRenderable.prototype.getLight = function () {
  * @param {Light} l
  */
 LightRenderable.prototype.addLight = function (l) {
-    this.mLight = l;
+    this.mLights.push(l);
 };
