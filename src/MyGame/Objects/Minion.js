@@ -1,19 +1,26 @@
 /**
  * Created by Laca on 2017. 04. 21..
  */
-/* globals LightRenderable, GameObject, SpriteAnimateRenderable, gEngine*/
+/* globals LightRenderable, GameObject, SpriteAnimateRenderable, gEngine, IllumRenderable*/
 "use strict";
 
 /**
  *
  * @param {string} spriteTexture
+ * @param {string} normalMap
  * @param {Number} atX
  * @param {Number} atY
  * @constructor
  */
-function Minion(spriteTexture, atX, atY) {
+function Minion(spriteTexture, normalMap, atX, atY) {
     this.kDelta = 0.2;
-    this.mMinion = new LightRenderable(spriteTexture);
+
+    if (normalMap === null) {
+        this.mMinion = new LightRenderable(spriteTexture);
+    } else {
+        this.mMinion = new IllumRenderable(spriteTexture, normalMap);
+    }
+
     this.mMinion.setColor([1, 1, 1, 0]);
     this.mMinion.getXform().setPosition(atX, atY);
     this.mMinion.getXform().setSize(12, 9.6);

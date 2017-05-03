@@ -1,7 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 15..
  */
-/* globals SimpleShader, TextureShader, SpriteShader, LightShader, vec4 */
+/* globals SimpleShader, TextureShader, SpriteShader, LightShader, IllumShader, vec4 */
 "use strict";
 
 var gEngine = gEngine || {};
@@ -52,6 +52,17 @@ gEngine.DefaultResources = (function () {
      */
     var getLightShader = function () {
         return mLightShader;
+    };
+
+    var kIllumFS = "src/GLSLShaders/IllumFS.glsl";
+    var mIllumShader = null;
+
+    /**
+     *
+     * @return {IllumShader}
+     */
+    var getIllumShader = function () {
+        return mIllumShader;
     };
 
     var kDefaultFont = "assets/fonts/system-default-font";
@@ -109,6 +120,7 @@ gEngine.DefaultResources = (function () {
         mTextureShader = new TextureShader(kTextureVS, kTextureFS);
         mSpriteShader = new SpriteShader(kTextureVS, kTextureFS);
         mLightShader = new LightShader(kTextureVS, kLightFS);
+        mIllumShader = new IllumShader(kTextureVS, kIllumFS);
         callBackFunction();
     };
 
@@ -123,6 +135,7 @@ gEngine.DefaultResources = (function () {
         gEngine.TextFileLoader.loadTextFile(kTextureVS, gEngine.TextFileLoader.eTextFileType.eTextFile);
         gEngine.TextFileLoader.loadTextFile(kTextureFS, gEngine.TextFileLoader.eTextFileType.eTextFile);
         gEngine.TextFileLoader.loadTextFile(kLightFS, gEngine.TextFileLoader.eTextFileType.eTextFile);
+        gEngine.TextFileLoader.loadTextFile(kIllumFS, gEngine.TextFileLoader.eTextFileType.eTextFile);
         gEngine.Fonts.loadFont(kDefaultFont);
         gEngine.ResourceMap.setLoadCompleteCallback(function () {
             _createShaders(callBackFunction);
@@ -137,12 +150,14 @@ gEngine.DefaultResources = (function () {
         mTextureShader.cleanUp();
         mSpriteShader.cleanUp();
         mLightShader.cleanUp();
+        mIllumShader.cleanUp();
 
         gEngine.TextFileLoader.unloadTextFile(kSimpleVS);
         gEngine.TextFileLoader.unloadTextFile(kSimpleFS);
         gEngine.TextFileLoader.unloadTextFile(kTextureVS);
         gEngine.TextFileLoader.unloadTextFile(kTextureFS);
         gEngine.TextFileLoader.unloadTextFile(kLightFS);
+        gEngine.TextFileLoader.unloadTextFile(kIllumFS);
 
         gEngine.Fonts.unloadFont(kDefaultFont);
     };
@@ -153,6 +168,7 @@ gEngine.DefaultResources = (function () {
         getTextureShader: getTextureShader,
         getSpriteShader: getSpriteShader,
         getLightShader: getLightShader,
+        getIllumShader: getIllumShader,
         getDefaultFont: getDefaultFont,
         getGlobalAmbientColor: getGlobalAmbientColor,
         setGlobalAmbientColor: setGlobalAmbientColor,
