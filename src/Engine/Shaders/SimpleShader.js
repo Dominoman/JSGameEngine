@@ -1,7 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 13..
  */
-/* globals gEngine, alert */
+/* globals gEngine, alert,WebGLProgram */
 "use strict";
 
 /**
@@ -30,7 +30,7 @@ function SimpleShader(vertexShaderPath, fragmentShaderPath) {
     gl.linkProgram(this.mCompiledShader);
 
     if (!gl.getProgramParameter(this.mCompiledShader, gl.LINK_STATUS)) {
-        alert("Error linking shader");
+        alert("Error linking shader (" + vertexShaderPath + "/" + fragmentShaderPath + ")");
         return null;
     }
     this.mShaderVertexPositionAttribute = gl.getAttribLocation(this.mCompiledShader, "aSquareVertexPosition");
@@ -56,7 +56,7 @@ SimpleShader.prototype._compileShader = function (filePath, shaderType) {
     gl.shaderSource(compiledShader, shaderSource);
     gl.compileShader(compiledShader);
     if (!gl.getShaderParameter(compiledShader, gl.COMPILE_STATUS)) {
-        alert("A shader compiling error occurred: " + gl.getShaderInfoLog(compiledShader));
+        alert("A shader compiling error occurred: " + gl.getShaderInfoLog(compiledShader) + " (" + filePath + ")");
     }
     return compiledShader;
 };

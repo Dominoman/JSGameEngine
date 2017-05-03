@@ -1,7 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 15..
  */
-/* global CameraState, mat4, vec2, gEngine, BoundingBox */
+/* global CameraState, mat4, vec3, vec2, gEngine, BoundingBox */
 "use strict";
 
 /**
@@ -12,6 +12,7 @@ function PerRenderCache() {
     this.mWCToPixelRatio = 1;  // WC to pixel transformation
     this.mCameraOrgX = 1; // Lower-left corner of camera in WC
     this.mCameraOrgY = 1;
+    this.mCameraPosInPixelSpace = vec3.fromValues(0, 0, 0);
 }
 
 /**
@@ -36,6 +37,8 @@ function Camera(wcCenter, wcWidth, viewportArray, bound) {
     this.setViewport(viewportArray, this.mViewportBound);
     this.mNearPlane = 0;
     this.mFarPlane = 1000;
+
+    this.kCameraZ = 10;
 
     // transformation matrices
     this.mViewMatrix = mat4.create();
@@ -161,6 +164,14 @@ Camera.prototype.getVPMatrix = function () {
 
 /**
  *
+ * @return {vec3|*}
+ */
+Camera.prototype.getPosInPixelSpace = function () {
+    return this.mRenderCache.mCameraPosInPixelSpace;
+};
+
+/**
+ *
  */
 Camera.prototype.setupViewProjection = function () {
     var gl = gEngine.Core.getGL();
@@ -191,6 +202,10 @@ Camera.prototype.setupViewProjection = function () {
     this.mRenderCache.mWCToPixelRatio = this.mViewport[Camera.eViewport.eWidth] / this.getWCWidth();
     this.mRenderCache.mCameraOrgX = center[0] - (this.getWCWidth() / 2);
     this.mRenderCache.mCameraOrgY = center[1] - (this.getWCHeight() / 2);
+    var p = this.wcPosToPixel(this.getWCCenter());
+    this.mRenderCache.mCameraPosInPixelSpace[0] = p[0];
+    this.mRenderCache.mCameraPosInPixelSpace[1] = p[1];
+    this.mRenderCache.mCameraPosInPixelSpace[2] = this.fakeZInPixelSpace(this.kCameraZ);
 };
 
 /**
