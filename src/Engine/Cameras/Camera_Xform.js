@@ -32,3 +32,15 @@ Camera.prototype.wcPosToPixel = function (p) {
 Camera.prototype.wcSizeToPixel = function (s) {
     return s * this.mRenderCache.mWCToPixelRatio + 0.5;
 };
+
+/**
+ *
+ * @param {vec3} d
+ * @returns {vec3}
+ */
+Camera.prototype.wcDirToPixel = function (d) {
+    var x = d[0] * this.mRenderCache.mWCToPixelRatio;
+    var y = d[1] * this.mRenderCache.mWCToPixelRatio;
+    var z = d[2];
+    return vec3.fromValues(x, y, z);
+};

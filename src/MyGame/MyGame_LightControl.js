@@ -3,12 +3,13 @@
  */
 
 /*jslint node: true, vars: true */
-/*global gEngine, MyGame */
+/*global gEngine, MyGame, vec3, Light */
 /* find out more about jslint: http://www.jslint.com/help.html */
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 MyGame.prototype._lightControl = function () {
+    var dirDelta = 0.005;
     var delta = 0.2;
     var msg = "";
     // player select which light to work 
@@ -17,37 +18,68 @@ MyGame.prototype._lightControl = function () {
     // manipulate the light
     var lgt = this.mGlobalLightSet.getLightAt(this.mLgtIndex);
     var p = lgt.getPosition();
+    var d = lgt.getDirection();
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
-        lgt.setXPos(p[0] - delta);
+        if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)) {
+            d[0] -= dirDelta;
+            lgt.setDirection(d);
+        } else {
+            lgt.setXPos(p[0] - delta);
+        }
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
-        lgt.setXPos(p[0] + delta);
+        if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)) {
+            d[0] += dirDelta;
+            lgt.setDirection(d);
+        } else {
+            lgt.setXPos(p[0] + delta);
+        }
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
-        lgt.setYPos(p[1] + delta);
+        if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)) {
+            d[1] += dirDelta;
+            lgt.setDirection(d);
+        } else {
+            lgt.setYPos(p[1] + delta);
+        }
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Down)) {
-        lgt.setYPos(p[1] - delta);
+        if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)) {
+            d[1] -= dirDelta;
+            lgt.setDirection(d);
+        } else {
+            lgt.setYPos(p[1] - delta);
+        }
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Z)) {
-        lgt.setZPos(p[2] + delta);
+        if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)) {
+            d[2] += dirDelta;
+            lgt.setDirection(d);
+        } else {
+            lgt.setZPos(p[2] + delta);
+        }
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.X)) {
-        lgt.setZPos(p[2] - delta);
+        if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)) {
+            d[2] -= dirDelta;
+            lgt.setDirection(d);
+        } else {
+            lgt.setZPos(p[2] - delta);
+        }
     }
 
     // radius
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.C)) {
-        lgt.setNear(lgt.getNear() + delta);
+        lgt.setInner(lgt.getInner() + (delta * 0.01)); // convert to radian
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.V)) {
-        lgt.setNear(lgt.getNear() - delta);
+        lgt.setInner(lgt.getInner() - (delta * 0.01)); // convert to radian
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.B)) {
-        lgt.setFar(lgt.getFar() + delta);
+        lgt.setOuter(lgt.getOuter() + (delta * 0.01)); // convert to radian
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.N)) {
-        lgt.setFar(lgt.getFar() - delta);
+        lgt.setOuter(lgt.getOuter() - (delta * 0.01)); // convert to radian
     }
 
     // Intensity
@@ -62,10 +94,17 @@ MyGame.prototype._lightControl = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.H)) {
         lgt.setLightTo(!lgt.isLightOn());
     }
-    msg = "On(" + lgt.isLightOn() + ") " +
-        this._printVec3("P", p) +
-        "R(" + lgt.getNear().toPrecision(3) + "/" + lgt.getFar().toPrecision(3) + ") " +
+
+    var lMsg = "";
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)) {
+        lMsg = this._printVec3("D", d);
+    } else {
+        lMsg = this._printVec3("P", p);
+    }
+    msg = "On(" + lgt.isLightOn() + ") " + lMsg +
+        "R(" + lgt.getInner().toPrecision(3) + "/" + lgt.getOuter().toPrecision(3) + ") " +
         "I(" + lgt.getIntensity().toPrecision(3) + ")";
+
     return msg;
 };
 
