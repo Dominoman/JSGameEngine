@@ -32,10 +32,17 @@ gEngine.Core = (function () {
      */
     var _initializeWebGL = function (htmlCanvasID) {
         var canvas = document.getElementById(htmlCanvasID);
-        mGL = canvas.getContext("webgl", {alpha: false}) || canvas.getContext("experimental-webgl", {alpha: false});
+        mGL = canvas.getContext("webgl", {
+                alpha: false,
+                depth: true,
+                stencil: true
+            }) || canvas.getContext("experimental-webgl", {alpha: false, depth: true, stencil: true});
         mGL.blendFunc(mGL.SRC_ALPHA, mGL.ONE_MINUS_SRC_ALPHA);
         mGL.enable(mGL.BLEND);
         mGL.pixelStorei(mGL.UNPACK_FLIP_Y_WEBGL, true);
+        mGL.enable(mGL.DEPTH_TEST);
+        mGL.depthFunc(mGL.LEQUAL);
+
         if (mGL === null) {
             document.write("<br><b>WebGL is not supported!</b>");
         }
@@ -47,7 +54,7 @@ gEngine.Core = (function () {
      */
     var clearCanvas = function (color) {
         mGL.clearColor(color[0], color[1], color[2], color[3]);
-        mGL.clear(mGL.COLOR_BUFFER_BIT);
+        mGL.clear(mGL.COLOR_BUFFER_BIT | mGL.STENCIL_BUFFER_BIT | mGL.DEPTH_BUFFER_BIT);
     };
 
     /**

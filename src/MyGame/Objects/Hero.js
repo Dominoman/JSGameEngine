@@ -8,15 +8,21 @@
  *
  * @param {string} spriteTexture
  * @param {string} normalMap
+ * @param {number} atX
+ * @param {number} atY
  * @constructor
  */
-function Hero(spriteTexture, normalMap) {
+function Hero(spriteTexture, normalMap, atX, atY) {
     this.kDelta = 0.3;
+    if (normalMap !== null) {
+        this.mDye = new IllumRenderable(spriteTexture, normalMap);
+    } else {
+        this.mDye = new LightRenderable(spriteTexture);
+    }
 
-    this.mDye = new IllumRenderable(spriteTexture, normalMap);
     this.mDye.setColor([1, 1, 1, 0]);
-    this.mDye.getXform().setPosition(35, 50);
-    this.mDye.getXform().setSize(9, 12);
+    this.mDye.getXform().setPosition(atX, atY);
+    this.mDye.getXform().setSize(18, 24);
     this.mDye.setElementPixelPositions(0, 120, 0, 180);
     GameObject.call(this, this.mDye);
 }

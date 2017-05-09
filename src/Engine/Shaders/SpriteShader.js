@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 18..
  */
+/* globals TextureShader, SimpleShader, gEngine */
 "use strict";
 
 /**
@@ -55,4 +56,19 @@ SpriteShader.prototype.cleanUp = function () {
     var gl = gEngine.Core.getGL();
     gl.deleteBuffer(this.mTexCoordBuffer);
     SimpleShader.prototype.cleanUp.call(this);
+};
+
+/**
+ *
+ * @param {Light} l
+ */
+SpriteShader.prototype.setLights = function (l) {
+};
+
+/**
+ *
+ * @param m
+ * @param p
+ */
+SpriteShader.prototype.setMaterialAndCameraPos = function (m, p) {
 };

@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 13..
  */
+/* globals gEngine, Transform */
 "use strict";
 
 /**
@@ -28,12 +29,38 @@ Renderable.prototype.draw = function (aCamera) {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 };
 
+/**
+ *
+ * @param color
+ */
 Renderable.prototype.setColor = function (color) {
     this.mColor = color;
 };
+
+/**
+ *
+ * @returns {Array|[number,number,number,number]|*}
+ */
 Renderable.prototype.getColor = function () {
     return this.mColor;
 };
+
+/**
+ *
+ * @param {SimpleShader} s
+ * @private
+ */
 Renderable.prototype._setShader = function (s) {
     this.mShader = s;
+};
+
+/**
+ *
+ * @param {SimpleShader} s
+ * @returns {SimpleShader|*}
+ */
+Renderable.prototype.swapShader = function (s) {
+    var out = this.mShader;
+    this.mShader = s;
+    return out;
 };

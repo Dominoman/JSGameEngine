@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 15..
  */
+/* globals vec2, vec3, mat4*/
 "use strict";
 
 /**
@@ -10,8 +11,20 @@
 function Transform() {
     this.mPosition = vec2.fromValues(0, 0);
     this.mScale = vec2.fromValues(1, 1);
+    this.mZ = 0.0;
     this.mRotationInRad = 0.0;
 }
+
+/**
+ *
+ * @param {Transform} aXform
+ */
+Transform.prototype.cloneTo = function (aXform) {
+    aXform.mPosition = vec2.clone(this.mPosition);
+    aXform.mScale = vec2.clone(this.mScale);
+    aXform.mZ = this.mZ;
+    aXform.mRotationInRad = this.mRotationInRad;
+};
 
 /**
  *
@@ -29,6 +42,38 @@ Transform.prototype.setPosition = function (xPos, yPos) {
  */
 Transform.prototype.getPosition = function () {
     return this.mPosition;
+};
+
+/**
+ *
+ * @returns {vec3}
+ */
+Transform.prototype.get3DPosition = function () {
+    return vec3.fromValues(this.getXPos(), this.getYPos(), this.getZPos());
+};
+
+/**
+ *
+ * @param {number} d
+ */
+Transform.prototype.setZPos = function (d) {
+    this.mZ = d;
+};
+
+/**
+ *
+ * @returns {number|*}
+ */
+Transform.prototype.getZPos = function () {
+    return this.mZ;
+};
+
+/**
+ *
+ * @param {number} delta
+ */
+Transform.prototype.incZPosBy = function (delta) {
+    this.mZ += delta;
 };
 
 /**
@@ -217,3 +262,14 @@ Transform.prototype.getXform = function () {
     return matrix;
 };
 
+/**
+ *
+ * @returns {mat4}
+ */
+Transform.prototype.getXform = function () {
+    var matrix = mat4.create();
+    mat4.translate(matrix, matrix, this.get3DPosition());
+    mat4.rotateZ(matrix, matrix, this.getRotationInRad());
+    mat4.scale(matrix, matrix, vec3.fromValues(this.getWidth(), this.getHeight(), 1.0));
+    return matrix;
+};

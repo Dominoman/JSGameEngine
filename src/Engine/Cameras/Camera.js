@@ -19,7 +19,7 @@ function PerRenderCache() {
  *
  * @param {vec2} wcCenter
  * @param {number} wcWidth
- * @param {array} viewportArray
+ * @param {Array} viewportArray
  * @param {number} bound
  * @constructor
  */
@@ -108,7 +108,7 @@ Camera.prototype.getWCHeight = function () {
 
 /**
  *
- * @param {array} viewportArray
+ * @param {Array} viewportArray
  * @param {number} bound
  */
 Camera.prototype.setViewport = function (viewportArray, bound) {
@@ -127,7 +127,7 @@ Camera.prototype.setViewport = function (viewportArray, bound) {
 
 /**
  *
- * @return {array|*}
+ * @return {Array|*}
  */
 Camera.prototype.getViewport = function () {
     var out = [];
@@ -190,7 +190,7 @@ Camera.prototype.setupViewProjection = function () {
     }
 
     mat4.lookAt(this.mViewMatrix,
-        [center[0], center[1], 10],
+        [center[0], center[1], this.kCameraZ],
         [center[0], center[1], 0],
         [0, 1, 0]);
 

@@ -27,6 +27,14 @@ LightRenderable.prototype.draw = function (aCamera) {
 
 /**
  *
+ * @returns {Number}
+ */
+LightRenderable.prototype.numLights = function () {
+    return this.mLights.length;
+};
+
+/**
+ *
  * @param {number} index
  * @return {Light}
  */

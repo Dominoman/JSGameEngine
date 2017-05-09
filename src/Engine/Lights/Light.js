@@ -26,6 +26,7 @@ function Light() {
     this.mDropOff = 1;
     this.mLightType = Light.eLightType.ePointLight;
     this.mIsOn = true;
+    this.mCastShadow = false;
 }
 
 /**
@@ -228,3 +229,18 @@ Light.prototype.isLightOn = function () {
     return this.mIsOn;
 };
 
+/**
+ *
+ * @returns {boolean}
+ */
+Light.prototype.isLightCastShadow = function () {
+    return this.mCastShadow;
+};
+
+/**
+ *
+ * @param {boolean} on
+ */
+Light.prototype.setLightCastShadowTo = function (on) {
+    this.mCastShadow = on;
+};
