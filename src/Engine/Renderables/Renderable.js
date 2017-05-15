@@ -31,7 +31,7 @@ Renderable.prototype.draw = function (aCamera) {
 
 /**
  *
- * @param color
+ * @param {Array} color
  */
 Renderable.prototype.setColor = function (color) {
     this.mColor = color;

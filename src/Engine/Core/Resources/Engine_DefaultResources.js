@@ -1,7 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 15..
  */
-/* globals SimpleShader, TextureShader, SpriteShader, LightShader, IllumShader, ShadowCasterShader, vec4 */
+/* globals SimpleShader, TextureShader, SpriteShader, LightShader, IllumShader, ShadowCasterShader, LineShader, vec4 */
 "use strict";
 
 var gEngine = gEngine || {};
@@ -87,6 +87,17 @@ gEngine.DefaultResources = (function () {
         return mShadowCasterShader;
     };
 
+    var kLineFS = "src/GLSLShaders/LineFS.glsl";
+    var mLineShader = null;
+
+    /**
+     *
+     * @return {LineShader}
+     */
+    var getLineShader = function () {
+        return mLineShader;
+    };
+
     var kDefaultFont = "assets/fonts/system-default-font";
 
     /**
@@ -145,6 +156,7 @@ gEngine.DefaultResources = (function () {
         mIllumShader = new IllumShader(kTextureVS, kIllumFS);
         mShadowReceiverShader = new SpriteShader(kTextureVS, kShadowReceiverFS);
         mShadowCasterShader = new ShadowCasterShader(kTextureVS, kShadowCasterFS);
+        mLineShader = new LineShader(kSimpleVS, kLineFS);
         callBackFunction();
     };
 
@@ -162,6 +174,7 @@ gEngine.DefaultResources = (function () {
         gEngine.TextFileLoader.loadTextFile(kIllumFS, gEngine.TextFileLoader.eTextFileType.eTextFile);
         gEngine.TextFileLoader.loadTextFile(kShadowReceiverFS, gEngine.TextFileLoader.eTextFileType.eTextFile);
         gEngine.TextFileLoader.loadTextFile(kShadowCasterFS, gEngine.TextFileLoader.eTextFileType.eTextFile);
+        gEngine.TextFileLoader.loadTextFile(kLineFS, gEngine.TextFileLoader.eTextFileType.eTextFile);
         gEngine.Fonts.loadFont(kDefaultFont);
         gEngine.ResourceMap.setLoadCompleteCallback(function () {
             _createShaders(callBackFunction);
@@ -179,6 +192,7 @@ gEngine.DefaultResources = (function () {
         mIllumShader.cleanUp();
         mShadowCasterShader.cleanUp();
         mShadowReceiverShader.cleanUp();
+        mLineShader.cleanUp();
 
         gEngine.TextFileLoader.unloadTextFile(kSimpleVS);
         gEngine.TextFileLoader.unloadTextFile(kSimpleFS);
@@ -188,6 +202,7 @@ gEngine.DefaultResources = (function () {
         gEngine.TextFileLoader.unloadTextFile(kIllumFS);
         gEngine.TextFileLoader.unloadTextFile(kShadowReceiverFS);
         gEngine.TextFileLoader.unloadTextFile(kShadowCasterFS);
+        gEngine.TextFileLoader.unloadTextFile(kLineFS);
         gEngine.Fonts.unloadFont(kDefaultFont);
     };
 
@@ -200,6 +215,7 @@ gEngine.DefaultResources = (function () {
         getIllumShader: getIllumShader,
         getShadowReceiverShader: getShadowReceiverShader,
         getShadowCasterShader: getShadowCasterShader,
+        getLineShader: getLineShader,
         getDefaultFont: getDefaultFont,
         getGlobalAmbientColor: getGlobalAmbientColor,
         setGlobalAmbientColor: setGlobalAmbientColor,

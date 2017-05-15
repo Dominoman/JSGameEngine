@@ -1,6 +1,7 @@
 /**
  * Created by Laca on 2017. 04. 20..
  */
+/* globals vec2, vec3, BoundingBox */
 "use strict";
 
 /**
@@ -13,6 +14,7 @@ function GameObject(renderableObj) {
     this.mVisible = true;
     this.mCurrentFrontDir = vec2.fromValues(0, 1);
     this.mSpeed = 0;
+    this.mPhysicsComponent = null;
 }
 
 /**
@@ -78,9 +80,29 @@ GameObject.prototype.getCurrentFrontDir = function () {
     return this.mCurrentFrontDir;
 };
 
+/**
+ *
+ * @param p
+ */
+GameObject.prototype.setPhysicsComponent = function (p) {
+    this.mPhysicsComponent = p;
+};
+
+/**
+ *
+ * @return {null|*}
+ */
+GameObject.prototype.getPhysicsComponent = function () {
+    return this.mPhysicsComponent;
+};
+
+/**
+ *
+ */
 GameObject.prototype.update = function () {
     var pos = this.getXform().getPosition();
     vec2.scaleAndAdd(pos, pos, this.getCurrentFrontDir(), this.getSpeed());
+    if (this.mPhysicsComponent !== null) this.mPhysicsComponent.update();
 };
 
 /**
@@ -98,6 +120,9 @@ GameObject.prototype.getRenderable = function () {
 GameObject.prototype.draw = function (aCamera) {
     if (this.isVisible())
         this.mRenderComponent.draw(aCamera);
+    if (this.mPhysicsComponent !== null) {
+        this.mPhysicsComponent.draw(aCamera);
+    }
 };
 
 /**

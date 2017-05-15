@@ -1,13 +1,14 @@
-/**
- * Created by Laca on 2017. 05. 03..
+/*
+ * File: Material.js
+ * Simple Phong illumination model material: Ka, Kd, KS, and Shininess.
  */
-/* globals vec4 */
-"use strict";
 
-/**
- *
- * @constructor
- */
+/*jslint node: true, vars: true */
+/*global gEngine, vec4 */
+/* find out more about jslint: http://www.jslint.com/help.html */
+
+"use strict";  // Operate in Strict mode such that variables must be declared before used!
+
 function Material() {
     this.mKa = vec4.fromValues(0.0, 0.0, 0.0, 0);
     this.mKs = vec4.fromValues(0.2, 0.2, 0.2, 1);
@@ -15,67 +16,37 @@ function Material() {
     this.mShininess = 20;
 }
 
-/**
- *
- * @param {vec4} a
- */
+//<editor-fold desc="Public Methods">
+//**-----------------------------------------
+// Public methods
+//**-----------------------------------------
 Material.prototype.setAmbient = function (a) {
     this.mKa = vec4.clone(a);
 };
-
-/**
- *
- * @return {vec4|*}
- */
 Material.prototype.getAmbient = function () {
     return this.mKa;
 };
 
-/**
- *
- * @param {vec4} d
- */
 Material.prototype.setDiffuse = function (d) {
     this.mKd = vec4.clone(d);
 };
-
-/**
- *
- * @return {vec4|*}
- */
 Material.prototype.getDiffuse = function () {
     return this.mKd;
 };
 
-/**
- *
- * @param {vec4} s
- */
 Material.prototype.setSpecular = function (s) {
     this.mKs = vec4.clone(s);
 };
-
-/**
- *
- * @return {vec4|*}
- */
 Material.prototype.getSpecular = function () {
     return this.mKs;
 };
 
-/**
- *
- * @param {number} s
- */
 Material.prototype.setShininess = function (s) {
     this.mShininess = s;
 };
-
-/**
- *
- * @return {number}
- */
 Material.prototype.getShininess = function () {
     return this.mShininess;
 };
+//--- end of Public Methods
 
+//</editor-fold>

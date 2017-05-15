@@ -24,7 +24,12 @@ gEngine.VertexBuffer = (function () {
         1.0, 0.0,
         0.0, 0.0
     ];
+    var verticesOfLine = [
+        0.5, 0.5, 0.0,
+        -0.5, -0.5, 0.0
+    ];
 
+    var mLineVertexBuffer = null;
     /**
      *
      * @return {WebGLBuffer}
@@ -43,6 +48,14 @@ gEngine.VertexBuffer = (function () {
 
     /**
      *
+     * @return {WebGLBuffer}
+     */
+    var getGLLineVertexRef = function () {
+        return mLineVertexBuffer;
+    };
+
+    /**
+     *
      */
     var initialize = function () {
         var gl = gEngine.Core.getGL();
@@ -52,6 +65,9 @@ gEngine.VertexBuffer = (function () {
         mTextureCoordBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, mTextureCoordBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates), gl.STATIC_DRAW);
+        mLineVertexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, mLineVertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesOfLine), gl.STATIC_DRAW);
     };
 
     /**
@@ -61,12 +77,14 @@ gEngine.VertexBuffer = (function () {
         var gl = gEngine.Core.getGL();
         gl.deleteBuffer(mSquareVertexBuffer);
         gl.deleteBuffer(mTextureCoordBuffer);
+        gl.deleteBuffer(mLineVertexBuffer);
     };
 
     var mPublic = {
         initialize: initialize,
         getGLVertexRef: getGLVertexRef,
         getGLTexCoordRef: getGLTexCoordRef,
+        getGLLineVertexRef: getGLLineVertexRef,
         cleanUp: cleanUp
     };
     return mPublic;

@@ -1,15 +1,44 @@
-/**
- * Created by Laca on 2017. 04. 18..
+/* 
+ * The template for a scene.
  */
-"use strict";
 
-/**
- *
- * @constructor
- */
+/*jslint node: true, vars: true */
+/*global gEngine: false, Transform: false */
+/* find out more about jslint: http://www.jslint.com/help.html */
+
+"use strict";  // Operate in Strict mode such that variables must be declared before used!
+
+// Constructor
 function Scene() {}
-Scene.prototype.initialize=function () {};
-Scene.prototype.loadScene=function () {};
-Scene.prototype.unloadScene=function () {};
-Scene.prototype.update=function () {};
-Scene.prototype.draw=function () {};
+
+//<editor-fold desc="functions subclass should override">
+
+// Begin Scene: must load all the scene contents
+// when done 
+//  => start the GameLoop
+// The game loop will call initialize and then update/draw
+Scene.prototype.loadScene = function () {
+    // override to load scene specific contents
+};
+
+// Performs all initialization functions
+//   => Should call gEngine.GameLoop.start(this)!
+Scene.prototype.initialize = function () {
+    // initialize the level (called from GameLoop)
+};
+
+// update function to be called form EngineCore.GameLoop
+Scene.prototype.update = function () {
+    // when done with this level should call:
+    // GameLoop.stop() ==> which will call this.unloadScene();
+};
+
+// draw function to be called from EngineCore.GameLoop
+Scene.prototype.draw = function () {
+};
+
+// Must unload all resources
+Scene.prototype.unloadScene = function () {
+    // .. unload all resources
+};
+//</editor-fold>
