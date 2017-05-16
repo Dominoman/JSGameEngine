@@ -1,7 +1,7 @@
 /**
  * Created by Laca on 2017. 05. 09..
  */
-/* globals LineRenderable */
+/* globals LineRenderable, vec2, gEngine */
 "use strict";
 
 RigidShape.eRigidType = Object.freeze({
@@ -20,6 +20,12 @@ function RigidShape(xform) {
     this.kPadding = 0.25;
     this.mPositionMark = new LineRenderable();
     this.mDrawBounds = false;
+
+    this.mInvMas = 1;
+    this.mRestitution = 0.8;
+    this.mVelocity = vec2.fromValues(0, 0);
+    this.mFriction = 0.3;
+    this.mAcceleration = gEngine.Physics.getSystemAcceleration();
 }
 
 /**

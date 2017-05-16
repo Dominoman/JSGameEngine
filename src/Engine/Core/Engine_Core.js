@@ -24,6 +24,7 @@ gEngine.Core = (function () {
             startScene(myGame);
         });
         gEngine.AudioClips.initAudioContext();
+        gEngine.Physics.initialize();
     };
 
     /**

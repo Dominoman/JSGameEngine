@@ -25,7 +25,7 @@ GameObjectSet.prototype.size = function () {
  * @return {GameObject}
  */
 GameObjectSet.prototype.getObjectAt = function (index) {
-    return this.mSet[index]
+    return this.mSet[index];
 };
 
 /**
@@ -33,7 +33,7 @@ GameObjectSet.prototype.getObjectAt = function (index) {
  * @param {GameObject} obj
  */
 GameObjectSet.prototype.addToSet = function (obj) {
-    this.mSet.push(obj)
+    this.mSet.push(obj);
 };
 
 /**
@@ -41,7 +41,7 @@ GameObjectSet.prototype.addToSet = function (obj) {
  */
 GameObjectSet.prototype.update = function () {
     for (var i = 0; i < this.mSet.length; i++) {
-        this.mSet[i].update()
+        this.mSet[i].update();
     }
 };
 
@@ -52,5 +52,16 @@ GameObjectSet.prototype.update = function () {
 GameObjectSet.prototype.draw = function (aCamera) {
     for (var i = 0; i < this.mSet.length; i++) {
         this.mSet[i].draw(aCamera);
+    }
+};
+
+/**
+ *
+ * @param {GameObject} obj
+ */
+GameObjectSet.prototype.removeFromSet = function (obj) {
+    var index = this.mSet.indexOf(obj);
+    if (index > -1) {
+        this.mSet.splice(index, 1);
     }
 };

@@ -10,7 +10,10 @@ var gEngine = gEngine || {};
  */
 gEngine.GameLoop = (function () {
     var kFPS = 60;
-    var kMPF = 1000 / kFPS;
+    var kFrameTime = 1 / kFPS;
+    var kMPF = 1000 * kFrameTime;
+
+
 
     var mPreviousTime;
     var mLagTime;
@@ -20,6 +23,13 @@ gEngine.GameLoop = (function () {
     var mIsLoopRunning = false;
     var mMyGame = null;
 
+    /**
+     *
+     * @return {number}
+     */
+    var getUpdateIntervalInSeconds = function () {
+        return kFrameTime;
+    };
     /**
      *
      * @private
@@ -54,7 +64,7 @@ gEngine.GameLoop = (function () {
         mLagTime = 0.0;
         mIsLoopRunning = true;
         requestAnimationFrame(function () {
-            _runLoop.call(mMyGame)
+            _runLoop.call(mMyGame);
         });
     };
 
@@ -67,7 +77,7 @@ gEngine.GameLoop = (function () {
         gEngine.ResourceMap.setLoadCompleteCallback(function () {
             mMyGame.initialize();
             _startLoop();
-        })
+        });
     };
     
     var stop=function () {
@@ -76,7 +86,8 @@ gEngine.GameLoop = (function () {
 
     var mPublic = {
         start: start,
-        stop:stop
+        stop: stop,
+        getUpdateIntervalInSeconds: getUpdateIntervalInSeconds
     };
     return mPublic;
 }());
